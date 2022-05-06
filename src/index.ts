@@ -17,7 +17,14 @@ function Main() {
     }
 
     const botClient = new Client({
-      intents: ["GuildMembers","GuildMessages","GuildPresences","GuildEmojisAndStickers","MessageContent","MessageContent"],
+      intents: [
+        'GuildMembers',
+        'GuildMessages',
+        'GuildPresences',
+        'GuildEmojisAndStickers',
+        'MessageContent',
+        'MessageContent',
+      ],
       ws: {
         properties: {
           $browser: 'Discord iOS',
@@ -34,6 +41,8 @@ function Main() {
     Commands.forEach((command) => {
       command.registerEvents(Emitter);
     });
+
+    botClient.on('debug', (msg) => Logger.debug(msg));
 
     botClient.login(botToken);
   } catch (err) {
@@ -63,7 +72,9 @@ async function InteractionHandler(interaction: Interaction<CacheType>) {
   } catch (err) {
     if (err) {
       Logger.error(
-        `An error occurred while handling an interaction. See error below.\n${err}\n\n${(err as Error).stack}`,
+        `An error occurred while handling an interaction. See error below.\n${err}\n\n${
+          (err as Error).stack
+        }`,
       );
     } else {
       Logger.error(

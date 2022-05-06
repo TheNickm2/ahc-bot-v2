@@ -1,9 +1,10 @@
 import { devCommand } from '@/commands/dev';
+import { rollCommand } from '@/commands/roll';
 import type { SlashCommandBuilder } from '@discordjs/builders';
 import type { CommandInteraction } from 'discord.js';
 import type { EventEmitter } from 'events';
 
-export const Commands = [devCommand] as Command[];
+export const Commands = [devCommand, rollCommand] as Command[];
 
 export interface Command {
   createCommand: () => SlashCommandBuilder;
