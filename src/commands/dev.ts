@@ -11,6 +11,7 @@ import { Logger } from '@/utils';
 import os from 'node:os';
 import type { embedDevInfoParams } from '@/embeds';
 import { embedDevInfo } from '@/embeds';
+import { getDbStatus } from '@/utils/database';
 
 const DEV_BUTTON_ID = 'devButton';
 
@@ -30,6 +31,9 @@ export const devCommand = {
       heapSize: fileSize(memory.heapTotal),
       heapUsed: fileSize(memory.heapUsed),
       hostname: os.hostname(),
+      services: {
+        database: getDbStatus()
+      },
       serverId: interaction.guildId ?? 'unknown',
       userId: interaction.user.id,
       developer: `<@${process.env.DEVELOPER_ID ?? 0}>`,
