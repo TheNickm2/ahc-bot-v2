@@ -1,16 +1,16 @@
 import chalk from 'chalk';
 
 export const Logger = {
-  debug: (msg: string) => {
+  debug: (msg: any) => {
     console.log(`[${chalk.gray('DEBUG')}] ${msg}`);
   },
-  info: (msg: string) => {
+  info: (msg: any) => {
     console.log(`[${chalk.blue('INFO')}] ${msg}`);
   },
-  warn: (msg: string) => {
+  warn: (msg: any) => {
     console.warn(`[${chalk.yellow('WARN')}] ${msg}`);
   },
-  error: (msg: string) => {
+  error: (msg: any) => {
     console.error(`[${chalk.red('ERROR')}] ${msg}`);
   },
 };
