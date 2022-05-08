@@ -61,7 +61,7 @@ function Main() {
 
 async function InteractionHandler(interaction: Interaction<CacheType>) {
   try {
-    if (interaction.isCommand()) {
+    if (interaction.isChatInputCommand()) {
       const command = Commands.find(
         (cmd) => cmd.createCommand().name === interaction.commandName,
       );
