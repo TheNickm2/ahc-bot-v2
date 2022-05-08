@@ -42,7 +42,8 @@ function Main() {
       command.registerEvents(Emitter);
     });
 
-    botClient.on('debug', (msg) => Logger.debug(msg));
+    // * debug-level logging for discord.js websocket connection
+    // botClient.on('debug', (msg) => Logger.debug(msg));
 
     botClient.login(botToken);
   } catch (err) {
@@ -66,7 +67,7 @@ async function InteractionHandler(interaction: Interaction<CacheType>) {
       );
       if (!command) return;
       await command.executeCommand(interaction);
-    } else if (interaction.isButton()) {
+    } else if (interaction.isButton() || interaction.isModalSubmit()) {
       Emitter.emit(interaction.customId, interaction);
     }
   } catch (err) {
