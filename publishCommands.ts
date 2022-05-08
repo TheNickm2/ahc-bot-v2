@@ -30,4 +30,6 @@ const rest = new REST({ version: '10' }).setToken(botToken);
   });
 
   Logger.info('Successfully refreshed application (slash) commands');
+
+  process.exit(0);
 })();

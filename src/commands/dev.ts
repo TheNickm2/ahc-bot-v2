@@ -1,6 +1,6 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   version as djsVersion,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
@@ -21,7 +21,7 @@ export const devCommand = {
       .setName('dev')
       .setDescription('Information for developers');
   },
-  executeCommand: async (interaction: CommandInteraction) => {
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
     const memory = process.memoryUsage();
 
     const devVars: embedDevInfoParams = {

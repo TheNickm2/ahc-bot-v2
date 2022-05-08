@@ -1,8 +1,8 @@
 import {
   ButtonInteraction,
   ButtonStyle,
+  ChatInputCommandInteraction,
   Collection,
-  CommandInteraction,
   TextChannel,
 } from 'discord.js';
 import {
@@ -19,7 +19,7 @@ const BUTON_ID = '';
 const randomInteger = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
-const msgOptions: Collection<string, CommandInteraction> = new Collection();
+const msgOptions: Collection<string, ChatInputCommandInteraction> = new Collection();
 
 const getResponseString = (qty: number, sides: number) => {
   let results = '';
@@ -48,7 +48,7 @@ export const rollCommand = {
           .setDescription('How many rolls should we do? (Max 10)'),
       );
   },
-  executeCommand: async (interaction: CommandInteraction) => {
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
     try {
       await interaction.deferReply();
 
