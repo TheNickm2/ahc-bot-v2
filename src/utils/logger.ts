@@ -5,7 +5,7 @@ export const Logger = {
     console.log(`[${chalk.gray('DEBUG')}] ${msg}`);
   },
   info: (msg: any) => {
-    console.log(`[${chalk.blue('INFO')}] ${msg}`);
+    console.log(`[${chalk.cyan('INFO')}] ${msg}`);
   },
   warn: (msg: any) => {
     console.warn(`[${chalk.yellow('WARN')}] ${msg}`);
