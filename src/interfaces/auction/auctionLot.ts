@@ -5,7 +5,7 @@ export interface AuctionBid {
 }
 
 export interface AuctionLot {
-  messageId?: string;
+  messageId: string;
   title: string;
   description: string;
   startingBid: number;
