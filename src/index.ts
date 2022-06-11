@@ -3,6 +3,7 @@ import { CacheType, Client, Intents, Interaction } from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
 import { initLogger, Logger } from '@/utils';
+import { initializeTopSellerCache } from '@/cache';
 
 Dotenv.config();
 
@@ -36,6 +37,9 @@ function Main() {
     botClient.on('ready', () => {
       initLogger(botClient);
       Logger.info(`Logged in as ${botClient.user?.username}`);
+      (async () => {
+        await initializeTopSellerCache();
+      })();
     });
 
     botClient.on('interactionCreate', InteractionHandler);

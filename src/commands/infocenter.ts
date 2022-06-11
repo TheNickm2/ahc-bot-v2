@@ -8,8 +8,9 @@ import {
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
-import { getTopSellersAhc, getTopSellersUpc, Logger } from '@/utils';
+import { Logger } from '@/utils';
 import DotEnv from 'dotenv';
+import * as Cache from '@/cache';
 
 DotEnv.config();
 
@@ -87,8 +88,8 @@ export const infoCenterCommand = {
       async (interaction: ButtonInteraction) => {
         try {
           await interaction.deferReply();
-          const topSellersAhc = await getTopSellersAhc();
-          const topSellersUpc = await getTopSellersUpc();
+          const { AHC: topSellersAhc, UPC: topSellersUpc } =
+            Cache.getTopSellers();
           if (!topSellersAhc || !topSellersUpc) {
             await interaction.deleteReply();
             await interaction.followUp({
