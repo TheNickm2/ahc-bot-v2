@@ -4,7 +4,7 @@ import { Logger } from '@/utils/logger';
 
 DotEnv.config();
 
-const DB_CLIENT = new Redis(process.env.REDIS_DB_STRING!);
+const DB_CLIENT = new Redis(process.env.REDIS_DB_STRING || '');
 
 export function getDbStatus() {
   return DB_CLIENT.status;

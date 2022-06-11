@@ -1,8 +1,8 @@
-import { CommandInteraction } from 'discord.js';
+import { ButtonInteraction, CommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
 
-export const TEMPLATECommand = {
+export const infoCenterCommand = {
   createCommand: () => {
     return new SlashCommandBuilder()
       .setName('cmdName')

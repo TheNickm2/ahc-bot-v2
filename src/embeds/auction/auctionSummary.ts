@@ -1,5 +1,1 @@
-
-
-export function embedAuctionSummary(lotInfo: any) {
-  
-}
+export function embedAuctionSummary(lotInfo: any) {}

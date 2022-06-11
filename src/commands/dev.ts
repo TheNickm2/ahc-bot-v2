@@ -32,7 +32,7 @@ export const devCommand = {
       heapUsed: fileSize(memory.heapUsed),
       hostname: os.hostname(),
       services: {
-        database: getDbStatus()
+        database: getDbStatus(),
       },
       serverId: interaction.guildId ?? 'unknown',
       userId: interaction.user.id,

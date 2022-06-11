@@ -11,7 +11,9 @@ const EMOTES = {
   LIST_ITEM: process.env.EMOTE_LIST_ITEM,
 };
 
-export function embedAuctionLot(lotInfo: Omit<AuctionLot, 'messageId' | 'bids'>) {
+export function embedAuctionLot(
+  lotInfo: Omit<AuctionLot, 'messageId' | 'bids'>,
+) {
   if (!lotInfo.startingBid) {
     return;
   }
