@@ -88,9 +88,9 @@ export const infoCenterCommand = {
       async (interaction: ButtonInteraction) => {
         try {
           await interaction.deferReply();
-          const { AHC: topSellersAhc, UPC: topSellersUpc } =
+          const { AHC: topSellersAhc, UPC: topSellersUpc, lastUpdated } =
             Cache.getTopSellers();
-          if (!topSellersAhc || !topSellersUpc) {
+          if (!topSellersAhc.size || !topSellersUpc.size) {
             await interaction.deleteReply();
             await interaction.followUp({
               ephemeral: true,
@@ -131,14 +131,18 @@ export const infoCenterCommand = {
             .addField('AHC Top Sellers', ahcSellerString)
             .addField('UPC Top Sellers', upcSellerString)
             .setFooter({
-              text: `Requested by ${interaction.user.username}#${interaction.user.discriminator}`,
+              text: `Cache last updated`,
             })
-            .setTimestamp();
+            .setTimestamp(lastUpdated);
 
           await interaction.editReply({
             embeds: [embed],
           });
         } catch (err) {
+          try {
+            await interaction.deleteReply();
+            await interaction.followUp({ephemeral: true, content: 'An error occurred while handling this request.'});
+          } catch(e){}
           Logger.error(err);
         }
       },

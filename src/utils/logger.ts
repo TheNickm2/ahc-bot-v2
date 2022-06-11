@@ -21,35 +21,35 @@ export const Logger = {
   },
   error: (msg: any) => {
     console.error(`[${chalk.red('ERROR')}] ${msg}`);
-    try {
-      const errorServerId = process.env.ERROR_SERVER_ID;
-      const errorChannelId = process.env.ERROR_CHANNEL_ID;
-      if (!errorServerId || !errorChannelId || !discordClient) {
-        return;
-      }
-      discordClient.guilds
-        .fetch(errorServerId)
-        .then((server) => {
-          if (!server) {
-            return;
-          }
-          server.channels
-            .fetch(errorChannelId)
-            .then((channel) => {
-              if (!channel || !channel.isText()) {
-                return;
-              }
-              channel.send(`${'`'}${msg}${'`'}`);
-            })
-            .catch((err) => {
-              throw err;
-            });
-        })
-        .catch((err) => {
-          throw err;
-        });
-    } catch (err) {
-      console.error(`Unable to send error message to Discord channel.`);
-    }
+    // try {
+    //   const errorServerId = process.env.ERROR_SERVER_ID;
+    //   const errorChannelId = process.env.ERROR_CHANNEL_ID;
+    //   if (!errorServerId || !errorChannelId || !discordClient) {
+    //     return;
+    //   }
+    //   discordClient.guilds
+    //     .fetch(errorServerId)
+    //     .then((server) => {
+    //       if (!server) {
+    //         return;
+    //       }
+    //       server.channels
+    //         .fetch(errorChannelId)
+    //         .then((channel) => {
+    //           if (!channel || !channel.isText()) {
+    //             return;
+    //           }
+    //           channel.send(`${'`'}${msg}${'`'}`);
+    //         })
+    //         .catch((err) => {
+    //           throw err;
+    //         });
+    //     })
+    //     .catch((err) => {
+    //       throw err;
+    //     });
+    // } catch (err) {
+    //   console.error(`Unable to send error message to Discord channel.`);
+    // }
   },
 };
