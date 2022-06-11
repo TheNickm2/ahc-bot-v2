@@ -1,9 +1,10 @@
 import {
   ButtonInteraction,
-  ButtonStyle,
-  ChatInputCommandInteraction,
+  CommandInteraction,
   Collection,
   TextChannel,
+  MessageActionRow,
+  MessageButton,
 } from 'discord.js';
 import {
   ActionRowBuilder,
@@ -12,14 +13,15 @@ import {
 } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
 import { Logger } from '@/utils';
+import { ButtonStyle } from 'discord-api-types/v10';
 
 const MIN_VALUE = 1;
-const BUTON_ID = '';
+const BUTTON_ID = '';
 
 const randomInteger = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
-const msgOptions: Collection<string, ChatInputCommandInteraction> = new Collection();
+const msgOptions: Collection<string, CommandInteraction> = new Collection();
 
 const getResponseString = (qty: number, sides: number) => {
   let results = '';
@@ -35,7 +37,7 @@ export const rollCommand = {
   createCommand: () => {
     return new SlashCommandBuilder()
       .setName('roll')
-      .setDefaultPermission(true)
+      .setDefaultMemberPermissions(2048)
       .setDescription(
         'Roll a die with the specified number of sides (Default 6)',
       )
@@ -48,7 +50,7 @@ export const rollCommand = {
           .setDescription('How many rolls should we do? (Max 10)'),
       );
   },
-  executeCommand: async (interaction: ChatInputCommandInteraction) => {
+  executeCommand: async (interaction: CommandInteraction) => {
     try {
       await interaction.deferReply();
 
@@ -60,14 +62,12 @@ export const rollCommand = {
         return;
       }
 
-      const componentRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
-        new ButtonBuilder()
+      const componentRow = new MessageActionRow<MessageButton>().addComponents([
+        new MessageButton()
           .setCustomId('reroll')
-          .setEmoji({
-            name: '🎲',
-          })
+          .setEmoji('🎲')
           .setLabel('Reroll')
-          .setStyle(ButtonStyle.Secondary),
+          .setStyle('SECONDARY'),
       ]);
 
       const interactionReply = await interaction.fetchReply();
@@ -149,12 +149,12 @@ export const rollCommand = {
         }
 
         const componentRow =
-          new ActionRowBuilder<ButtonBuilder>().addComponents([
-            new ButtonBuilder()
+          new MessageActionRow<MessageButton>().addComponents([
+            new MessageButton()
               .setCustomId('reroll')
-              .setEmoji({ name: '🎲' })
+              .setEmoji('🎲')
               .setLabel('Reroll')
-              .setStyle(ButtonStyle.Secondary),
+              .setStyle('SECONDARY'),
           ]);
 
         const sides = (previousInteraction.options.get('sides', false)?.value ??

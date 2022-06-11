@@ -1,5 +1,5 @@
 import { Commands } from './commands';
-import { CacheType, Client, Interaction } from 'discord.js';
+import { CacheType, Client, Intents, Interaction } from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
 import { Logger } from '@/utils';
@@ -18,12 +18,13 @@ function Main() {
 
     const botClient = new Client({
       intents: [
-        'GuildMembers',
-        'GuildMessages',
-        'GuildPresences',
-        'GuildEmojisAndStickers',
-        'MessageContent',
-        'MessageContent',
+        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_PRESENCES,
+        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.DIRECT_MESSAGES,
+        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
       ],
       ws: {
         properties: {
@@ -61,7 +62,7 @@ function Main() {
 
 async function InteractionHandler(interaction: Interaction<CacheType>) {
   try {
-    if (interaction.isChatInputCommand()) {
+    if (interaction.isCommand()) {
       const command = Commands.find(
         (cmd) => cmd.createCommand().name === interaction.commandName,
       );

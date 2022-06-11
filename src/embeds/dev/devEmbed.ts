@@ -1,4 +1,4 @@
-import { EmbedBuilder } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 export interface embedDevInfoParams {
   nodeVersion: string;
@@ -16,7 +16,7 @@ export interface embedDevInfoParams {
 }
 
 export function embedDevInfo(params: embedDevInfoParams) {
-  return new EmbedBuilder().setTitle(`Developer Info`).addFields([
+  return new MessageEmbed().setTitle(`Developer Info`).addFields([
     {
       name: 'Versions',
       value: `Node.js: ${params.nodeVersion}\nTypeScript: v${params.tsVersion}\ndiscord.js: v${params.djsVersion}`,

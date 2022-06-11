@@ -1,6 +1,6 @@
 import {
   ButtonInteraction,
-  ChatInputCommandInteraction,
+  CommandInteraction,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
@@ -11,7 +11,7 @@ export const TEMPLATECommand = {
       .setName('cmdName')
       .setDescription('cmdDescription');
   },
-  executeCommand: async (interaction: ChatInputCommandInteraction) => {
+  executeCommand: async (interaction: CommandInteraction) => {
     await interaction.reply({
       ephemeral: true,
       content: 'response'

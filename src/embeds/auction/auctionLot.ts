@@ -1,5 +1,5 @@
 import type { AuctionLot } from '@/interfaces';
-import { EmbedBuilder } from '@discordjs/builders';
+import { MessageEmbed } from 'discord.js';
 import DotEnv from 'dotenv';
 
 DotEnv.config();
@@ -55,7 +55,7 @@ export function embedAuctionLot(lotInfo: Omit<AuctionLot, 'messageId' | 'bids'>)
     });
   }
 
-  return new EmbedBuilder()
+  return new MessageEmbed()
     .setTitle(lotInfo.title)
     .setDescription(lotInfo.description)
     .setImage(lotInfo.imageUrl ?? null)

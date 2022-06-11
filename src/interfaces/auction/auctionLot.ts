@@ -2,6 +2,7 @@ export interface AuctionBid {
   interactionId: string;
   userId: string;
   bidValue: number;
+  timestamp: string;
 }
 
 export interface AuctionLot {
