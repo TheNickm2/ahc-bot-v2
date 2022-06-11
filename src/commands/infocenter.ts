@@ -19,6 +19,7 @@ const TOP_SELLERS_BUTTON_ID = 'topSellers';
 const CHECK_MY_STATUS_BUTTON_ID = 'checkMyStatus';
 const VINNY_RAFFLE_BUTTON_ID = 'vinnyRaffle';
 const SERVER_BOOSTER_BUTTON_ID = 'serverBooster';
+const SHARE_BOOSTER_BUTTON_ID = 'shareBooster';
 
 export const infoCenterCommand = {
   createCommand: () => {
@@ -176,12 +177,30 @@ export const infoCenterCommand = {
             return `${acc}\n<a:nitroboostspin:909698016141778966> ${member.toString()}`;
           }, '');
 
+          const isOfficer =
+            interaction.memberPermissions?.has('MODERATE_MEMBERS');
+          const msgActionRow = new MessageActionRow().addComponents(
+            new MessageButton()
+              .setCustomId(SHARE_BOOSTER_BUTTON_ID)
+              .setLabel('Share with Channel')
+              .setStyle('SECONDARY'),
+          );
+
           await interaction.editReply({
             content: `HUGE THANK YOU to our server boosters, listed below:${boostersListString}\n\nMany of the great features of our Discord server would be impossible to use without the support of these amazing server boosters!`,
+            components: isOfficer ? [msgActionRow] : [],
           });
         } catch (err) {
           Logger.error(err);
         }
+      },
+    );
+    emitter.on(
+      SHARE_BOOSTER_BUTTON_ID,
+      async (interaction: ButtonInteraction) => {
+        interaction.reply({
+          content: interaction.message.content,
+        });
       },
     );
   },
