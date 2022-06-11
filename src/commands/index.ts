@@ -1,3 +1,4 @@
+import { auctionCommand } from '@/commands/auction';
 import { devCommand } from '@/commands/dev';
 import { rollCommand } from '@/commands/roll';
 import type { SlashCommandBuilder } from '@discordjs/builders';
@@ -7,6 +8,7 @@ import type { EventEmitter } from 'events';
 export const Commands = [
   devCommand,
   rollCommand,
+  auctionCommand
 ] as Command[];
 
 export interface Command {
