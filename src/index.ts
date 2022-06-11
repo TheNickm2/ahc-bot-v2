@@ -3,7 +3,7 @@ import { CacheType, Client, Intents, Interaction } from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
 import { initLogger, Logger } from '@/utils';
-import { initializeTopSellerCache } from '@/cache';
+import { initializeAhcMemberCache, initializeTopSellerCache } from '@/cache';
 
 Dotenv.config();
 
@@ -38,7 +38,8 @@ function Main() {
       initLogger(botClient);
       Logger.info(`Logged in as ${botClient.user?.username}`);
       (async () => {
-        await initializeTopSellerCache();
+        initializeTopSellerCache();
+        initializeAhcMemberCache();
       })();
     });
 

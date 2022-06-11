@@ -1,4 +1,4 @@
-import { getTopSellersAhc, getTopSellersUpc } from '@/utils';
+import { getTopSellersAhc, getTopSellersUpc, Logger } from '@/utils';
 import { Collection } from 'discord.js';
 import schedule from 'node-schedule';
 
@@ -25,4 +25,5 @@ async function revalidateTopSellers() {
   topSellersAhc = await getTopSellersAhc() || new Collection();
   topSellersUpc = await getTopSellersUpc() || new Collection();
   lastUpdated = new Date();
+  Logger.info(`Top seller cache updated.`);
 }

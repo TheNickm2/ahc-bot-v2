@@ -1,6 +1,7 @@
 import {
   ButtonInteraction,
   CommandInteraction,
+  GuildMember,
   GuildMemberRoleManager,
   MessageActionRow,
   MessageButton,
@@ -88,8 +89,11 @@ export const infoCenterCommand = {
       async (interaction: ButtonInteraction) => {
         try {
           await interaction.deferReply();
-          const { AHC: topSellersAhc, UPC: topSellersUpc, lastUpdated } =
-            Cache.getTopSellers();
+          const {
+            AHC: topSellersAhc,
+            UPC: topSellersUpc,
+            lastUpdated,
+          } = Cache.getTopSellers();
           if (!topSellersAhc.size || !topSellersUpc.size) {
             await interaction.deleteReply();
             await interaction.followUp({
@@ -141,8 +145,11 @@ export const infoCenterCommand = {
         } catch (err) {
           try {
             await interaction.deleteReply();
-            await interaction.followUp({ephemeral: true, content: 'An error occurred while handling this request.'});
-          } catch(e){}
+            await interaction.followUp({
+              ephemeral: true,
+              content: 'An error occurred while handling this request.',
+            });
+          } catch (e) {}
           Logger.error(err);
         }
       },
@@ -150,7 +157,139 @@ export const infoCenterCommand = {
 
     emitter.on(
       CHECK_MY_STATUS_BUTTON_ID,
-      async (interaction: ButtonInteraction) => {},
+      async (interaction: ButtonInteraction) => {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+        const { AHC, UPC, lastUpdated } = Cache.getMembers();
+        if (!AHC.size || !UPC.size) {
+          await interaction.editReply({
+            content:
+              'An error occurred while handling this request. Please try again later.',
+          });
+          return;
+        }
+        const discordMember = interaction.member as GuildMember;
+        const memberName = discordMember.nickname
+          ? discordMember.nickname
+          : discordMember.user.username;
+        const memberAhc = AHC.get(memberName.trim().toLowerCase());
+        const memberUpc = UPC.get(memberName.trim().toLowerCase());
+        if (!memberAhc && !memberUpc) {
+          await interaction.editReply({
+            content: `Unable to find a guild member with the name ${memberName}. If your Discord account name does not match your in-game account name, please set your nickname to match your in-game account name and try again.`,
+          });
+          return;
+        }
+
+        const raffleKey = Object.keys(memberAhc ?? memberUpc ?? {}).find(
+          (key) => key.startsWith('Vinny Raffle Tickets'),
+        );
+        const bonusKey = Object.keys(memberAhc ?? memberUpc ?? {}).find((key) =>
+          key.startsWith('Vinny Bonus Tickets'),
+        );
+
+        const ahcEmbed = memberAhc
+          ? new MessageEmbed()
+              .setTitle('Your AHC Status')
+              .setAuthor({
+                name: 'AHF Info Center',
+                iconURL: process.env.EMBED_AUTHOR_ICON || '',
+                url: process.env.EMBED_AUTHOR_LINK || '',
+              })
+              .setColor(EMBED_COLOR)
+              .setDescription(
+                `Hello ${memberName}! Check your AHC status below!`,
+              )
+              .addFields([
+                {
+                  name: 'User ID',
+                  value: memberAhc.Who,
+                  inline: true,
+                },
+                {
+                  name: 'Sales',
+                  value: memberAhc.Sales.toLocaleString('en-US'),
+                  inline: true,
+                },
+                {
+                  name: 'Requirements Met',
+                  value: memberAhc.Safe
+                    ? process.env.EMOTE_CHECK || 'Yes'
+                    : process.env.EMOTE_CANCEL || 'No',
+                  inline: true,
+                },
+                {
+                  name: 'Vinny Raffle Tickets',
+                  value: memberAhc[raffleKey ?? 'raffle'] ?? 0,
+                  inline: true,
+                },
+                {
+                  name: 'Vinny Bonus Tickets',
+                  value: memberAhc[bonusKey ?? 'bonus'] ?? 0,
+                  inline: true,
+                },
+                {
+                  name: 'Mat Raffle Tickets',
+                  value: memberAhc['Mat Raffle Tickets'] ?? 0,
+                  inline: true,
+                },
+              ])
+              .setFooter({ text: `Cache last updated` })
+              .setTimestamp(lastUpdated)
+          : undefined;
+        const upcEmbed = memberUpc
+          ? new MessageEmbed()
+              .setTitle('Your UPC Status')
+              .setAuthor({
+                name: 'AHF Info Center',
+                iconURL: process.env.EMBED_AUTHOR_ICON || '',
+                url: process.env.EMBED_AUTHOR_LINK || '',
+              })
+              .setColor(EMBED_COLOR)
+              .setDescription(
+                `Hello ${memberName}! Check your UPC status below!`,
+              )
+              .addFields([
+                {
+                  name: 'User ID',
+                  value: memberUpc.Who,
+                  inline: true,
+                },
+                {
+                  name: 'Sales',
+                  value: memberUpc.Sales.toLocaleString('en-US'),
+                  inline: true,
+                },
+                {
+                  name: 'Vinny Raffle Tickets',
+                  value: memberUpc[raffleKey ?? 'raffle'] ?? 0,
+                  inline: true,
+                },
+                {
+                  name: 'Vinny Bonus Tickets',
+                  value: memberUpc[bonusKey ?? 'bonus'] ?? 0,
+                  inline: true,
+                },
+                {
+                  name: 'Mat Raffle Tickets',
+                  value: memberUpc['Mat Raffle Tickets'] ?? 0,
+                  inline: true,
+                },
+              ])
+              .setFooter({ text: `Cache last updated` })
+              .setTimestamp(lastUpdated)
+          : undefined;
+
+        const embeds: MessageEmbed[] = [];
+
+        if (ahcEmbed) embeds.push(ahcEmbed);
+        if (upcEmbed) embeds.push(upcEmbed);
+
+        await interaction.editReply({
+          embeds,
+        });
+      },
     );
 
     emitter.on(

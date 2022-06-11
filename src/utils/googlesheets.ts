@@ -61,39 +61,65 @@ export async function getTopSellersUpc() {
   }
 }
 
-export async function getAhcMemberList(memberName: string) {
+export async function getAhcMembers() {
   try {
     const sheetId = process.env.GOOGLE_SPREADSHEET_ID;
     if (!sheetId) {
+      console.warn(
+        'The Google Sheet ID was not found in the environment variables. Please ensure the GOOGLE_SPREADSHEET_ID environment variable exists.',
+      );
       return false;
     }
     const sheetHelper = new GoogleSheetsHelper(sheetId);
     const sheet = await sheetHelper.loadSheet('AHC Bot Pull');
     if (!sheet) return false;
-    await sheet.loadHeaderRow();
-    await sheet.loadCells('A1:F502');
+    await sheet.loadCells('A2:F502');
+    const ahcMembers: Collection<string, AhfGuildMember> = new Collection();
     const rows = await sheet.getRows();
-    const guildMembers = new Collection<string, GuildMember>();
-    rows.forEach(async (row) => {
-      const rowData = row as GuildMember;
-      if (rowData.Who && rowData.Who.trim() != '') {
-        guildMembers.set(rowData.Who.trim().toLowerCase(), rowData);
-      }
+    rows.forEach((row) => {
+      const rowData = row as AhfGuildMember;
+      if (!rowData.Who || rowData.Who.trim() === '') return;
+      ahcMembers.set(rowData.Who.trim().toLowerCase(), rowData);
     });
-    return guildMembers.get(memberName.trim().toLowerCase().replace('@', ''));
+    if (ahcMembers.size === 0) return false;
+    return ahcMembers;
   } catch (ex) {
     console.error(ex);
     return false;
   }
 }
 
-export async function getUpcMemberList() {}
+export async function getUpcMembers() {
+  try {
+    const sheetId = process.env.GOOGLE_SPREADSHEET_ID;
+    if (!sheetId) {
+      console.warn(
+        'The Google Sheet ID was not found in the environment variables. Please ensure the GOOGLE_SPREADSHEET_ID environment variable exists.',
+      );
+      return false;
+    }
+    const sheetHelper = new GoogleSheetsHelper(sheetId);
+    const sheet = await sheetHelper.loadSheet('UPC Bot Pull');
+    if (!sheet) return false;
+    await sheet.loadCells('A2:F502');
+    const ahcMembers: Collection<string, AhfGuildMember> = new Collection();
+    const rows = await sheet.getRows();
+    rows.forEach((row) => {
+      const rowData = row as AhfGuildMember;
+      if (!rowData.Who || rowData.Who.trim() === '') return;
+      ahcMembers.set(rowData.Who.trim().toLowerCase(), rowData);
+    });
+    if (ahcMembers.size === 0) return false;
+    return ahcMembers;
+  } catch (ex) {
+    console.error(ex);
+    return false;
+  }}
 
-interface GuildMember extends GoogleSpreadsheetRow {
+export interface AhfGuildMember extends GoogleSpreadsheetRow {
   Who: string;
   Sales: number;
-  'Mat Deposit'?: string;
-  Safe: boolean;
+  Safe?: boolean;
   'Mat Raffle Tickets': number;
   [key: string]: any;
 }
