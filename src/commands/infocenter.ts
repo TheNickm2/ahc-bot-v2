@@ -111,14 +111,14 @@ export const infoCenterCommand = {
 
           let ahcSellerString = '';
           topSellersAhc.forEach((amount, sellerName) => {
-            ahcSellerString += `${sellerName} (${amount.toLocaleString(
+            ahcSellerString += `${process.env.EMOTE_LIST_ITEM || '-'} ${sellerName} (${amount.toLocaleString(
               'en-US',
             )})\n`;
           });
 
           let upcSellerString = '';
           topSellersUpc.forEach((amount, sellerName) => {
-            upcSellerString += `${sellerName} (${amount.toLocaleString(
+            upcSellerString += `${process.env.EMOTE_LIST_ITEM || '-'} ${sellerName} (${amount.toLocaleString(
               'en-US',
             )})\n`;
           });
