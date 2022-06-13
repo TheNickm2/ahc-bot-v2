@@ -23,6 +23,12 @@ const VINNY_RAFFLE_BUTTON_ID = 'vinnyRaffle';
 const SERVER_BOOSTER_BUTTON_ID = 'serverBooster';
 const SHARE_BOOSTER_BUTTON_ID = 'shareBooster';
 
+const AHC_BANNER_EMOTE = '<:AHCbanner:975254289888968794>';
+const UPC_BANNER_EMOTE = '<:UPCbanner:985742809606807553>';
+
+const AHC_BANNER_IMAGE = 'https://media.discordapp.net/stickers/975254619657756702.png';
+const UPC_BANNER_IMAGE = 'https://media.discordapp.net/stickers/985746042542764164.png';
+
 export const infoCenterCommand = {
   createCommand: () => {
     return new SlashCommandBuilder()
@@ -132,8 +138,8 @@ export const infoCenterCommand = {
             .setThumbnail(
               'https://cdn.discordapp.com/emojis/726992358251561091.gif',
             )
-            .addField('AHC Top Sellers', ahcSellerString)
-            .addField('UPC Top Sellers', upcSellerString)
+            .addField(`${AHC_BANNER_EMOTE} AHC Top Sellers`, ahcSellerString)
+            .addField(`${UPC_BANNER_EMOTE} UPC Top Sellers`, upcSellerString)
             .setFooter({
               text: `Cache last updated`,
             })
@@ -147,7 +153,7 @@ export const infoCenterCommand = {
             await interaction.deleteReply();
             await interaction.followUp({
               ephemeral: true,
-              content: 'An error occurred while handling this request.',
+              content: `An error occurred while handling this request.\n\n\`${err}\``,
             });
           } catch (e) {}
           Logger.error(err);
@@ -235,6 +241,7 @@ export const infoCenterCommand = {
                   inline: true,
                 },
               ])
+              .setThumbnail(AHC_BANNER_IMAGE)
               .setFooter({ text: `Cache last updated` })
               .setTimestamp(lastUpdated)
           : undefined;
@@ -277,6 +284,7 @@ export const infoCenterCommand = {
                   inline: true,
                 },
               ])
+              .setThumbnail(UPC_BANNER_IMAGE)
               .setFooter({ text: `Cache last updated` })
               .setTimestamp(lastUpdated)
           : undefined;
