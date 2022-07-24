@@ -1,5 +1,5 @@
 import type { AuctionLot } from '@/interfaces';
-import { MessageEmbed } from 'discord.js';
+import { HexColorString, MessageEmbed } from 'discord.js';
 import DotEnv from 'dotenv';
 
 DotEnv.config();
@@ -11,12 +11,16 @@ const EMOTES = {
   LIST_ITEM: process.env.EMOTE_LIST_ITEM,
 };
 
+const EMBED_COLOR =
+  (process.env.EMBED_COLOR as HexColorString) || ('#b072ff' as HexColorString);
+
 export function embedAuctionLot(
   lotInfo: Omit<AuctionLot, 'messageId' | 'bids'>,
 ) {
   if (!lotInfo.startingBid) {
     return;
   }
+
   const fields: { name: string; value: string; inline?: boolean }[] = [
     {
       name: 'Starting Bid',
@@ -61,5 +65,6 @@ export function embedAuctionLot(
     .setTitle(lotInfo.title)
     .setDescription(lotInfo.description)
     .setImage(lotInfo.imageUrl ?? null)
-    .setFields(fields);
+    .setFields(fields)
+    .setColor(EMBED_COLOR);
 }

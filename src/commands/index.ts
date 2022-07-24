@@ -9,7 +9,7 @@ import type { EventEmitter } from 'events';
 export const Commands = [
   devCommand,
   rollCommand,
-  // auctionCommand,
+  auctionCommand,
   infoCenterCommand,
 ] as Command[];
 

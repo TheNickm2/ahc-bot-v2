@@ -3,6 +3,7 @@ import {
   CommandInteraction,
   GuildMember,
   GuildMemberRoleManager,
+  HexColorString,
   MessageActionRow,
   MessageButton,
   MessageEmbed,
@@ -15,7 +16,8 @@ import * as Cache from '@/cache';
 
 DotEnv.config();
 
-const EMBED_COLOR = '#b072ff';
+const EMBED_COLOR =
+  (process.env.EMBED_COLOR as HexColorString) || ('#b072ff' as HexColorString);
 
 const TOP_SELLERS_BUTTON_ID = 'topSellers';
 const CHECK_MY_STATUS_BUTTON_ID = 'checkMyStatus';
@@ -26,8 +28,10 @@ const SHARE_BOOSTER_BUTTON_ID = 'shareBooster';
 const AHC_BANNER_EMOTE = '<:AHCbanner:975254289888968794>';
 const UPC_BANNER_EMOTE = '<:UPCbanner:985742809606807553>';
 
-const AHC_BANNER_IMAGE = 'https://media.discordapp.net/stickers/975254619657756702.png';
-const UPC_BANNER_IMAGE = 'https://media.discordapp.net/stickers/985746042542764164.png';
+const AHC_BANNER_IMAGE =
+  'https://media.discordapp.net/stickers/975254619657756702.png';
+const UPC_BANNER_IMAGE =
+  'https://media.discordapp.net/stickers/985746042542764164.png';
 
 export const infoCenterCommand = {
   createCommand: () => {
@@ -111,16 +115,16 @@ export const infoCenterCommand = {
 
           let ahcSellerString = '';
           topSellersAhc.forEach((amount, sellerName) => {
-            ahcSellerString += `${process.env.EMOTE_LIST_ITEM || '-'} ${sellerName} (${amount.toLocaleString(
-              'en-US',
-            )})\n`;
+            ahcSellerString += `${
+              process.env.EMOTE_LIST_ITEM || '-'
+            } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
           });
 
           let upcSellerString = '';
           topSellersUpc.forEach((amount, sellerName) => {
-            upcSellerString += `${process.env.EMOTE_LIST_ITEM || '-'} ${sellerName} (${amount.toLocaleString(
-              'en-US',
-            )})\n`;
+            upcSellerString += `${
+              process.env.EMOTE_LIST_ITEM || '-'
+            } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
           });
 
           const embed = new MessageEmbed()
