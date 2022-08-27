@@ -1,19 +1,25 @@
 export interface AuctionBid {
-  interactionId: string;
   userId: string;
-  bidValue: number;
-  timestamp: string;
+  messageId: string;
+  interactionId: string;
+  amount: number;
 }
 
 export interface AuctionLot {
   messageId: string;
   title: string;
   description: string;
+  imageUrl: string;
   startingBid: number;
   currentBid?: number;
   currentLeaderId?: string;
-  imageUrl: string;
   paid?: boolean;
   sent?: boolean;
-  bids?: AuctionBid[];
+}
+
+export interface AuctionLotHistory {
+  messageId: string;
+  data: string;
+  winnerId: string;
+  winningBid: number;
 }

@@ -9,8 +9,8 @@ export interface embedDevInfoParams {
   hostname: string;
   serverId: string;
   userId: string;
-  services: {
-    database: string;
+  services?: {
+    database?: string;
   };
   developer: string;
 }
