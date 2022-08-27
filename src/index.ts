@@ -4,6 +4,7 @@ import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
 import { initLogger, Logger } from '@/utils';
 import { initializeAhcMemberCache, initializeTopSellerCache } from '@/cache';
+import { connect, connection } from 'mongoose';
 
 Dotenv.config();
 
@@ -51,6 +52,11 @@ function Main() {
 
     // * debug-level logging for discord.js websocket connection
     // botClient.on('debug', (msg) => Logger.debug(msg));
+
+    // Initialize database connection
+    connect(process.env.MONGODB_STRING ?? '')
+      .then(() => Logger.info(`MongoDB connection ready on port ${connection.port}`))
+      .catch((err) => console.error(err));
 
     botClient.login(botToken);
   } catch (err) {
