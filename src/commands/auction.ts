@@ -12,6 +12,7 @@ import type { EventEmitter } from 'events';
 import { downloadAuctionLots, isStringUrl, Logger } from '@/utils';
 import { embedAuctionLot } from '@/embeds';
 import { saveAuctionLot } from '@/database';
+import { postAuctionLots } from '@/utils/postAuctionLots';
 
 const DEFAULT_PERMISSIONS_INTEGER = 1099511627782;
 
@@ -51,5 +52,35 @@ export const auctionCommand = {
       ephemeral: true,
     });
   },
-  registerEvents: (emitter: EventEmitter) => {},
+  registerEvents: (emitter: EventEmitter) => {
+    emitter.addListener(
+      POST_LOTS_BUTTON_ID,
+      async (interaction: ButtonInteraction) => {
+        await interaction.deferReply({
+          ephemeral: true,
+        });
+        if (!interaction.channel) {
+          await interaction.guild?.fetch();
+          await interaction.guild?.channels.fetch();
+          await interaction.channel!.fetch();
+          if (!interaction.channel) {
+            await interaction.editReply({
+              content: 'Could not load text channel information.'
+            });
+            return;
+          }
+        }
+        const res = await postAuctionLots(interaction.channel);
+        if (!res) {
+          await interaction.editReply({
+            content: 'Failed to post lots.',
+          });
+          return;
+        }
+        await interaction.editReply({
+          content: 'Successfully posted lots.',
+        });
+      },
+    );
+  },
 };

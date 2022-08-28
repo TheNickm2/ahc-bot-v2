@@ -15,7 +15,7 @@ const EMBED_COLOR =
   (process.env.EMBED_COLOR as HexColorString) || ('#b072ff' as HexColorString);
 
 export function embedAuctionLot(
-  lotInfo: Omit<IAuctionLot, 'messageId' | 'bids'>,
+  lotInfo: Omit<IAuctionLot, 'id'>,
 ) {
   if (!lotInfo.startingBid) {
     return;

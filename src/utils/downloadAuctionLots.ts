@@ -20,7 +20,10 @@ export async function downloadAuctionLots() {
     }
     const sheetHelper = new GoogleSheetsHelper(sheetId);
     const sheet = await sheetHelper.loadSheet('DiscordAuctionLots');
-    if (!sheet) { Logger.error('Sheet could not be loaded.'); return;};
+    if (!sheet) {
+      Logger.error('Sheet could not be loaded.');
+      return;
+    }
     await sheet.loadCells('A2:D100');
     const rows = await sheet.getRows();
     const auctionLots: Array<Omit<IAuctionLot, 'id'>> = [];
@@ -31,14 +34,14 @@ export async function downloadAuctionLots() {
         !rowData.Title?.length ||
         !rowData.Description?.length ||
         !rowData['Starting Bid']?.length ||
-        !Number(rowData['Starting Bid']?.replace(/[$,]/g, '') ?? 0)
+        !Number(rowData['Starting Bid']?.replaceAll(/([$,])/g, ''))
       ) {
         return;
       }
       auctionLots.push({
         title: rowData.Title,
         description: rowData.Description,
-        startingBid: Number(rowData['Starting Bid']),
+        startingBid: Number(rowData['Starting Bid']?.replaceAll(/([$,])/g, '')),
         image: rowData.Image,
       });
     });
