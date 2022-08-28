@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connection } from 'mongoose';
 
 export interface IAuctionLot {
   title: string;
@@ -21,7 +21,7 @@ const auctionLotSchema = new Schema<IAuctionLot>({
   currentLeader: String,
   paid: Boolean,
   sent: Boolean,
-  id: { type: String, required: true },
+  id: { type: String, required: true, unique: true },
 });
 
 const AuctionLot = model<IAuctionLot>('AuctionLot', auctionLotSchema);
