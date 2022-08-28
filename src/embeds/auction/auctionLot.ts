@@ -45,22 +45,6 @@ export function embedAuctionLot(
     });
   }
 
-  if (lotInfo.paid) {
-    fields.push({
-      name: 'Paid',
-      value: `${EMOTES.CHECK}`,
-      inline: true,
-    });
-  }
-
-  if (lotInfo.sent) {
-    fields.push({
-      name: 'Sent',
-      value: `${EMOTES.CHECK}`,
-      inline: true,
-    });
-  }
-
   return new MessageEmbed()
     .setTitle(lotInfo.title)
     .setDescription(lotInfo.description)
