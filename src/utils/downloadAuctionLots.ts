@@ -2,6 +2,9 @@ import { GoogleSheetsHelper, Logger } from '@/utils';
 import type { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import type { IAuctionLot } from '@/database';
 import numeral from 'numeral';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface GoogleSheetLot extends GoogleSpreadsheetRow {
   Title: string;
@@ -12,7 +15,7 @@ interface GoogleSheetLot extends GoogleSpreadsheetRow {
 
 export async function downloadAuctionLots() {
   try {
-    const sheetId = '1YunSIoKSdttNrFXV7YNvx7f37y7X6Z85J3EkEOSi1w0';
+    const sheetId = process.env.GOOGLE_SPREADSHEET_ID;
     if (!sheetId) {
       Logger.error(
         'The Google Sheet ID was not found in the environment variables. Please ensure the GOOGLE_SPREADSHEET_ID environment variable exists.',
