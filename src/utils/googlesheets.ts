@@ -1,3 +1,4 @@
+import { Logger } from '@/utils';
 import { Collection } from 'discord.js';
 import { GoogleSpreadsheet, GoogleSpreadsheetRow } from 'google-spreadsheet';
 
@@ -26,7 +27,7 @@ export async function getTopSellersAhc() {
     }
     return topSellers;
   } catch (ex) {
-    console.error(ex);
+    Logger.error(ex);
     return false;
   }
 }
@@ -56,7 +57,7 @@ export async function getTopSellersUpc() {
     }
     return topSellers;
   } catch (ex) {
-    console.error(ex);
+    Logger.error(ex);
     return false;
   }
 }
@@ -84,7 +85,7 @@ export async function getAhcMembers() {
     if (ahcMembers.size === 0) return false;
     return ahcMembers;
   } catch (ex) {
-    console.error(ex);
+    Logger.error(ex);
     return false;
   }
 }
@@ -112,7 +113,7 @@ export async function getUpcMembers() {
     if (ahcMembers.size === 0) return false;
     return ahcMembers;
   } catch (ex) {
-    console.error(ex);
+    Logger.error(ex);
     return false;
   }}
 

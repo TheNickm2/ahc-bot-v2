@@ -1,3 +1,4 @@
+import { Logger } from '@/utils';
 import { Schema, model, connection } from 'mongoose';
 
 export interface IAuctionLot {
@@ -33,7 +34,7 @@ export async function getAuctionLot(lotId: string) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }
 
@@ -49,6 +50,6 @@ export async function saveAuctionLot(lot: IAuctionLot) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }

@@ -56,7 +56,7 @@ function Main() {
     // Initialize database connection
     connect(process.env.MONGODB_STRING ?? '')
       .then(() => Logger.info(`MongoDB connection ready on port ${connection.port}`))
-      .catch((err) => console.error(err));
+      .catch((err) => Logger.error(err));
 
     botClient.login(botToken);
   } catch (err) {

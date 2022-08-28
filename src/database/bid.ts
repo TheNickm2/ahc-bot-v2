@@ -1,4 +1,5 @@
 import { Schema, model, connection } from 'mongoose';
+import { Logger } from '@/utils/logger';
 
 export interface IAuctionBid {
   interactionId: string;
@@ -23,7 +24,7 @@ export async function getAuctionBid(interactionId: string) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }
 
@@ -39,6 +40,6 @@ export async function saveAuctionBid(bid: IAuctionBid) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }

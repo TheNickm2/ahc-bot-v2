@@ -1,3 +1,4 @@
+import { Logger } from '@/utils';
 import { Schema, model, connection } from 'mongoose';
 
 export interface IHistoricalLot {
@@ -30,7 +31,7 @@ export async function getHistoricalLot(lotId: string) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }
 
@@ -46,6 +47,6 @@ export async function saveHistoricalLot(lot: IHistoricalLot) {
       return result;
     }
   } catch (err) {
-    console.error(err);
+    Logger.error(err);
   }
 }
