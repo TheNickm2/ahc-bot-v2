@@ -8,8 +8,6 @@ export interface IAuctionLot {
   startingBid: number;
   currentBid?: number;
   currentLeader?: string;
-  paid?: boolean;
-  sent?: boolean;
   id: string;
 }
 
@@ -20,8 +18,6 @@ const auctionLotSchema = new Schema<IAuctionLot>({
   startingBid: { type: Number, required: true },
   currentBid: Number,
   currentLeader: String,
-  paid: Boolean,
-  sent: Boolean,
   id: { type: String, required: true, unique: true },
 });
 
@@ -31,6 +27,17 @@ export async function getAuctionLot(lotId: string) {
   try {
     const result = await AuctionLot.findOne({ id: lotId });
     if (result) {
+      return result;
+    }
+  } catch (err) {
+    Logger.error(err);
+  }
+}
+
+export async function getAllAuctionLots() {
+  try {
+    const result = await AuctionLot.find();
+    if (result && result.length) {
       return result;
     }
   } catch (err) {
@@ -50,6 +57,29 @@ export async function saveAuctionLot(lot: IAuctionLot) {
       return result;
     }
   } catch (err) {
+    Logger.error(err);
+  }
+}
+
+export async function deleteAuctionLot(lotId: string) {
+  try {
+    const result = await AuctionLot.findOneAndDelete({ id: lotId });
+    if (result) {
+      return true;
+    }
+  } catch (err) {
+    Logger.error(err);
+  }
+}
+
+export async function deleteAllAuctionLots() {
+  try {
+    const result = await AuctionLot.deleteMany();
+    if (result) {
+      return true;
+    }
+  }
+  catch (err) {
     Logger.error(err);
   }
 }
