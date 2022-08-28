@@ -115,7 +115,8 @@ export async function getUpcMembers() {
   } catch (ex) {
     Logger.error(ex);
     return false;
-  }}
+  }
+}
 
 export interface AhfGuildMember extends GoogleSpreadsheetRow {
   Who: string;
@@ -125,7 +126,7 @@ export interface AhfGuildMember extends GoogleSpreadsheetRow {
   [key: string]: any;
 }
 
-class GoogleSheetsHelper {
+export class GoogleSheetsHelper {
   private readonly doc: GoogleSpreadsheet;
   private clientEmail: string;
   private clientPrivateKey: string;

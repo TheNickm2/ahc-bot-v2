@@ -1,4 +1,4 @@
-import type { AuctionLot } from '@/interfaces';
+import type { IAuctionLot } from '@/database';
 import { HexColorString, MessageEmbed } from 'discord.js';
 import DotEnv from 'dotenv';
 
@@ -15,7 +15,7 @@ const EMBED_COLOR =
   (process.env.EMBED_COLOR as HexColorString) || ('#b072ff' as HexColorString);
 
 export function embedAuctionLot(
-  lotInfo: Omit<AuctionLot, 'messageId' | 'bids'>,
+  lotInfo: Omit<IAuctionLot, 'messageId' | 'bids'>,
 ) {
   if (!lotInfo.startingBid) {
     return;
@@ -37,10 +37,10 @@ export function embedAuctionLot(
     });
   }
 
-  if (lotInfo.currentLeaderId) {
+  if (lotInfo.currentLeader) {
     fields.push({
       name: 'Current Leader',
-      value: `<@${lotInfo.currentLeaderId}>`,
+      value: `<@${lotInfo.currentLeader}>`,
       inline: true,
     });
   }
@@ -64,7 +64,7 @@ export function embedAuctionLot(
   return new MessageEmbed()
     .setTitle(lotInfo.title)
     .setDescription(lotInfo.description)
-    .setImage(lotInfo.imageUrl ?? null)
+    .setImage(lotInfo.image || '')
     .setFields(fields)
     .setColor(EMBED_COLOR);
 }
