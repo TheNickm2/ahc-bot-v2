@@ -1,6 +1,7 @@
 import { GoogleSheetsHelper, Logger } from '@/utils';
 import type { GoogleSpreadsheetRow } from 'google-spreadsheet';
 import type { IAuctionLot } from '@/database';
+import numeral from 'numeral';
 
 interface GoogleSheetLot extends GoogleSpreadsheetRow {
   Title: string;
@@ -34,14 +35,14 @@ export async function downloadAuctionLots() {
         !rowData.Title?.length ||
         !rowData.Description?.length ||
         !rowData['Starting Bid']?.length ||
-        !Number(rowData['Starting Bid']?.replaceAll(/([$,])/g, ''))
+        !numeral(rowData['Starting Bid']).value()
       ) {
         return;
       }
       auctionLots.push({
         title: rowData.Title,
         description: rowData.Description,
-        startingBid: Number(rowData['Starting Bid']?.replaceAll(/([$,])/g, '')),
+        startingBid: numeral(rowData['Starting Bid']).value()!,
         image: rowData.Image,
       });
     });
