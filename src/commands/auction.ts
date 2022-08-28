@@ -3,21 +3,26 @@ import {
   CommandInteraction,
   MessageActionRow,
   MessageButton,
-  MessageEmbed,
   Modal,
+  ModalSubmitInteraction,
   TextInputComponent,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
 import { downloadAuctionLots, isStringUrl, Logger } from '@/utils';
-import { embedAuctionLot } from '@/embeds';
-import { saveAuctionLot } from '@/database';
+import { getAllAuctionLots, saveAuctionLot } from '@/database';
 import { postAuctionLots } from '@/utils/postAuctionLots';
+import { TextInputStyle } from 'discord-api-types/v10';
 
 const DEFAULT_PERMISSIONS_INTEGER = 1099511627782;
 
 const POST_LOTS_BUTTON_ID = 'post-lots';
 const START_AUCTION_BUTTON_ID = 'start-auction';
+
+const START_AUCTION_MODAL_ID = 'start-auction-modal';
+
+const START_MODAL_END_DATE_INPUT_ID = 'start-modal-date-input';
+const START_MODAL_ANNOUNCEMENT_INPUT_ID = 'start-modal-announcement-input';
 
 export const auctionCommand = {
   createCommand: () => {
@@ -58,7 +63,7 @@ export const auctionCommand = {
           await interaction.channel!.fetch();
           if (!interaction.channel) {
             await interaction.editReply({
-              content: 'Could not load text channel information.'
+              content: 'Could not load text channel information.',
             });
             return;
           }
@@ -72,6 +77,53 @@ export const auctionCommand = {
         }
         await interaction.editReply({
           content: 'Successfully posted lots.',
+        });
+      },
+    );
+
+    emitter.addListener(
+      START_AUCTION_BUTTON_ID,
+      async (interaction: ButtonInteraction) => {
+        const lots = await getAllAuctionLots();
+        if (!lots?.length) {
+          await interaction.reply({
+            content: 'No auction lots found in the database. Please ensure you have posted the lots from the Google Sheet first.',
+            ephemeral: true,
+          });
+          return;
+        }
+        const modal = new Modal()
+          .setCustomId(START_AUCTION_MODAL_ID)
+          .setTitle('Start Auction')
+          .addComponents(
+            new MessageActionRow<TextInputComponent>().addComponents(
+              new TextInputComponent()
+                .setCustomId(START_MODAL_END_DATE_INPUT_ID)
+                .setLabel('Auction End Date')
+                .setRequired(true)
+                .setStyle('SHORT')
+                .setPlaceholder('Saturday at 8PM Eastern time'),
+            ),
+            new MessageActionRow<TextInputComponent>().addComponents(
+              new TextInputComponent()
+                .setCustomId(START_MODAL_ANNOUNCEMENT_INPUT_ID)
+                .setLabel('Auction Announcement Message')
+                .setRequired(true)
+                .setStyle('PARAGRAPH')
+                .setPlaceholder(
+                  'Message to be sent to all users when the auction starts.',
+                ),
+            ),
+          );
+        await interaction.showModal(modal);
+      },
+    );
+
+    emitter.addListener(
+      START_AUCTION_MODAL_ID,
+      async (interaction: ModalSubmitInteraction) => {
+        await interaction.deferReply({
+          ephemeral: true,
         });
       },
     );
