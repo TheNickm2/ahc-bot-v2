@@ -15,7 +15,7 @@ interface GoogleSheetLot extends GoogleSpreadsheetRow {
 
 export async function downloadAuctionLots() {
   try {
-    const sheetId = process.env.GOOGLE_SPREADSHEET_ID;
+    const sheetId = process.env.DISCORD_AUCTION_SHEET_ID;
     if (!sheetId) {
       Logger.error(
         'The Google Sheet ID was not found in the environment variables. Please ensure the GOOGLE_SPREADSHEET_ID environment variable exists.',

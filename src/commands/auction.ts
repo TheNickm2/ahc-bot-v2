@@ -5,6 +5,7 @@ import {
   MessageButton,
   Modal,
   ModalSubmitInteraction,
+  TextChannel,
   TextInputComponent,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
@@ -161,7 +162,7 @@ export const auctionCommand = {
             return;
           }
         }
-        const result = await startAuction(endDate, announcementInput.trim(), interaction.channel);
+        const result = await startAuction(endDate, announcementInput.trim(), interaction.channel as TextChannel);
       },
     );
   },
