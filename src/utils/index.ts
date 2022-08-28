@@ -3,3 +3,4 @@ export * from './googlesheets';
 export * from './isStringUrl';
 export * from './downloadAuctionLots';
 export * from './postAuctionLots';
+export * from './startAuction';

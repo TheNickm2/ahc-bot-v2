@@ -9,10 +9,10 @@ import {
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
-import { downloadAuctionLots, isStringUrl, Logger } from '@/utils';
+import { downloadAuctionLots, isStringUrl, Logger, startAuction } from '@/utils';
 import { getAllAuctionLots, saveAuctionLot } from '@/database';
 import { postAuctionLots } from '@/utils/postAuctionLots';
-import { TextInputStyle } from 'discord-api-types/v10';
+import Sugar from 'sugar';
 
 const DEFAULT_PERMISSIONS_INTEGER = 1099511627782;
 
@@ -87,7 +87,8 @@ export const auctionCommand = {
         const lots = await getAllAuctionLots();
         if (!lots?.length) {
           await interaction.reply({
-            content: 'No auction lots found in the database. Please ensure you have posted the lots from the Google Sheet first.',
+            content:
+              'No auction lots found in the database. Please ensure you have posted the lots from the Google Sheet first.',
             ephemeral: true,
           });
           return;
@@ -99,10 +100,10 @@ export const auctionCommand = {
             new MessageActionRow<TextInputComponent>().addComponents(
               new TextInputComponent()
                 .setCustomId(START_MODAL_END_DATE_INPUT_ID)
-                .setLabel('Auction End Date')
+                .setLabel('Auction End Date (Eastern Time)')
                 .setRequired(true)
                 .setStyle('SHORT')
-                .setPlaceholder('Saturday at 8PM Eastern time'),
+                .setPlaceholder('Saturday at 8PM'),
             ),
             new MessageActionRow<TextInputComponent>().addComponents(
               new TextInputComponent()
@@ -125,6 +126,42 @@ export const auctionCommand = {
         await interaction.deferReply({
           ephemeral: true,
         });
+        const endDateInput = interaction.fields.getTextInputValue(
+          START_MODAL_END_DATE_INPUT_ID,
+        );
+        const announcementInput = interaction.fields.getTextInputValue(
+          START_MODAL_ANNOUNCEMENT_INPUT_ID,
+        );
+        if (!endDateInput?.trim().length) {
+          await interaction.editReply({
+            content: 'Please enter an auction end date.',
+          });
+          return;
+        } else if (!announcementInput?.trim().length) {
+          await interaction.editReply({
+            content: 'Please enter an auction announcement message.',
+          });
+          return;
+        }
+        const endDate = Sugar.Date.create(endDateInput.trim());
+        if (!endDate || !Sugar.Date.isFuture(endDate)) {
+          await interaction.editReply({
+            content: 'Provided end date was in the past or invalid.',
+          });
+          return;
+        }
+        if (!interaction.channel) {
+          await interaction.guild?.fetch();
+          await interaction.guild?.channels.fetch();
+          await interaction.channel!.fetch();
+          if (!interaction.channel) {
+            await interaction.editReply({
+              content: 'Could not load text channel information.',
+            });
+            return;
+          }
+        }
+        const result = await startAuction(endDate, announcementInput.trim(), interaction.channel);
       },
     );
   },
