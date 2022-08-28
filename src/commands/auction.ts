@@ -17,7 +17,6 @@ import { postAuctionLots } from '@/utils/postAuctionLots';
 const DEFAULT_PERMISSIONS_INTEGER = 1099511627782;
 
 const POST_LOTS_BUTTON_ID = 'post-lots';
-const UPDATE_LOTS_BUTTON_ID = 'update-lots';
 const START_AUCTION_BUTTON_ID = 'start-auction';
 
 export const auctionCommand = {
@@ -31,11 +30,6 @@ export const auctionCommand = {
     const postLotsButton = new MessageButton()
       .setCustomId(POST_LOTS_BUTTON_ID)
       .setLabel('Post Lots')
-      .setStyle('DANGER');
-
-    const updateLotsButton = new MessageButton()
-      .setCustomId(UPDATE_LOTS_BUTTON_ID)
-      .setLabel('Update Lots')
       .setStyle('SECONDARY');
     const startAuctionButton = new MessageButton()
       .setCustomId(START_AUCTION_BUTTON_ID)
@@ -43,7 +37,6 @@ export const auctionCommand = {
       .setStyle('SUCCESS');
     const actionRow = new MessageActionRow().addComponents([
       postLotsButton,
-      updateLotsButton,
       startAuctionButton,
     ]);
     await interaction.reply({
