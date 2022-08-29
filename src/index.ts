@@ -2,7 +2,7 @@ import { Commands } from './commands';
 import { CacheType, Client, Intents, Interaction } from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
-import { initLogger, Logger } from '@/utils';
+import { Logger } from '@/utils';
 import { initializeAhcMemberCache, initializeTopSellerCache } from '@/cache';
 import { connect, connection } from 'mongoose';
 
@@ -36,7 +36,6 @@ function Main() {
     });
 
     botClient.on('ready', () => {
-      initLogger(botClient);
       Logger.info(`Logged in as ${botClient.user?.username}`);
       (async () => {
         initializeTopSellerCache();
