@@ -16,6 +16,7 @@ const EMBED_COLOR =
 
 export function embedAuctionLot(
   lotInfo: Omit<IAuctionLot, 'id'>,
+  declareWinner: boolean = false,
 ) {
   if (!lotInfo.startingBid) {
     return;
@@ -31,7 +32,7 @@ export function embedAuctionLot(
 
   if (lotInfo.currentBid) {
     fields.push({
-      name: 'Current Bid',
+      name: declareWinner ? 'Winning Bid' : 'Current Bid',
       value: `${EMOTES.COIN} ${lotInfo.currentBid.toLocaleString('en-us')}`,
       inline: true,
     });
@@ -39,7 +40,7 @@ export function embedAuctionLot(
 
   if (lotInfo.currentLeader) {
     fields.push({
-      name: 'Current Leader',
+      name: declareWinner ? 'Winner' : 'Current Leader',
       value: `<@${lotInfo.currentLeader}>`,
       inline: true,
     });
