@@ -32,7 +32,7 @@ export async function activateAuction(endDate: Date) {
 
 export async function initializeAuctionEndJob(endDate: Date) {
   try {
-    Logger.error('Initializing auction end job');
+    Logger.info('Initializing auction end job');
     const job = schedule
       .scheduleJob(endDate, async () => {
         await endAuction();
