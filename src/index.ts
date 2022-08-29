@@ -47,7 +47,7 @@ function Main() {
             (await getRedisKeyValue('auctionEndDate')) || undefined,
           );
           if (endDate) {
-            initializeAuctionEndJob(endDate);
+            initializeAuctionEndJob(endDate, botClient);
           }
         }
       })();

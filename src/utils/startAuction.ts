@@ -51,7 +51,7 @@ export async function startAuction(
 
     // Set redis keys for auction activation status & end date
     // Also set a job to end the auction after the end date
-    await activateAuction(endDate);
+    await activateAuction(endDate, channel.client, channel);
 
     // Post announcement in announcement channel
     const announcementChannelId = process.env.ANNOUNCEMENT_CHANNEL_ID;
