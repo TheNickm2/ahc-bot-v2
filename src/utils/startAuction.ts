@@ -8,7 +8,9 @@ import {
   TextBasedChannel,
   TextChannel,
 } from 'discord.js';
+import schedule from 'node-schedule';
 import dotenv from 'dotenv';
+import { endAuction } from '@/utils/endAuction';
 
 dotenv.config();
 
@@ -54,7 +56,14 @@ export async function startAuction(
       embeds: [summaryEmbed],
     });
 
-    // TODO: SET AUCTION STARTEDED FLAG AND SCHEDULE TASK WITH NODE-SCHEDULER
+    // Set auction active flag
+    const setRedisStartFlag = await setRedisKeyValue('auction-active', 'true');
+    if (!setRedisStartFlag) return;
+
+    // Schedule end auction job
+    const endAuctionJob = schedule.scheduleJob(endDate, async () => {
+      await endAuction();
+    });
 
     // Post announcement in announcement channel
     const announcementChannelId = process.env.ANNOUNCEMENT_CHANNEL_ID;
