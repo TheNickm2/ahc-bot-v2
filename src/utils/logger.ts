@@ -28,7 +28,14 @@ export const Logger = {
   },
   error: (msg: any) => {
     console.error(`[${chalk.red('ERROR')}] ${msg}`);
-    writeLogToDiscord(msg, 'error');
+    if (
+      logLevel === 'error' ||
+      logLevel === 'warn' ||
+      logLevel === 'info' ||
+      logLevel === 'debug'
+    ) {
+      writeLogToDiscord(msg, 'error');
+    }
   },
 };
 
