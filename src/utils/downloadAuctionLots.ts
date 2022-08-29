@@ -23,7 +23,7 @@ export async function downloadAuctionLots() {
       return;
     }
     const sheetHelper = new GoogleSheetsHelper(sheetId);
-    const sheet = await sheetHelper.loadSheet('DiscordAuctionLots');
+    const sheet = await sheetHelper.loadSheet('Discord Auction Lots');
     if (!sheet) {
       Logger.error('Sheet could not be loaded.');
       return;
