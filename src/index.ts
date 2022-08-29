@@ -2,9 +2,10 @@ import { Commands } from './commands';
 import { CacheType, Client, Intents, Interaction } from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
-import { Logger } from '@/utils';
+import { getRedisKeyValue, initializeAuctionEndJob, Logger } from '@/utils';
 import { initializeAhcMemberCache, initializeTopSellerCache } from '@/cache';
 import { connect, connection } from 'mongoose';
+import Sugar from 'sugar';
 
 Dotenv.config();
 
@@ -40,6 +41,15 @@ function Main() {
       (async () => {
         initializeTopSellerCache();
         initializeAhcMemberCache();
+        const isAuctionActive = await getRedisKeyValue('auctionActive');
+        if (isAuctionActive === 'true') {
+          const endDate = Sugar.Date.create(
+            (await getRedisKeyValue('auctionEndDate')) || undefined,
+          );
+          if (endDate) {
+            initializeAuctionEndJob(endDate);
+          }
+        }
       })();
     });
 
@@ -54,7 +64,9 @@ function Main() {
 
     // Initialize database connection
     connect(process.env.MONGODB_STRING ?? '')
-      .then(() => Logger.info(`MongoDB connection ready on port ${connection.port}`))
+      .then(() =>
+        Logger.info(`MongoDB connection ready on port ${connection.port}`),
+      )
       .catch((err) => Logger.error(err));
 
     botClient.login(botToken);

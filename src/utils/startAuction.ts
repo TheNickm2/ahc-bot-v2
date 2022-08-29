@@ -1,6 +1,6 @@
 import { getAllAuctionLots } from '@/database';
 import { embedAuctionSummary } from '@/embeds';
-import { Logger } from '@/utils';
+import { activateAuction, initializeAuctionEndJob, Logger } from '@/utils';
 import { setRedisKeyValue } from '@/utils/redis';
 import {
   MessageActionRow,
@@ -39,13 +39,6 @@ export async function startAuction(
       if (!editResult) return;
     });
 
-    // Set auction end date in redis
-    const redisDateResult = await setRedisKeyValue(
-      'auction-end-date',
-      endDate.toUTCString(),
-    );
-    if (!redisDateResult) return;
-
     // Post auction embed to channel
     const summaryEmbed = embedAuctionSummary({
       auctionLots,
@@ -56,14 +49,9 @@ export async function startAuction(
       embeds: [summaryEmbed],
     });
 
-    // Set auction active flag
-    const setRedisStartFlag = await setRedisKeyValue('auction-active', 'true');
-    if (!setRedisStartFlag) return;
-
-    // Schedule end auction job
-    const endAuctionJob = schedule.scheduleJob(endDate, async () => {
-      await endAuction();
-    });
+    // Set redis keys for auction activation status & end date
+    // Also set a job to end the auction after the end date
+    await activateAuction(endDate);
 
     // Post announcement in announcement channel
     const announcementChannelId = process.env.ANNOUNCEMENT_CHANNEL_ID;
