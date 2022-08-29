@@ -30,18 +30,22 @@ export function embedAuctionLot(
     },
   ];
 
-  if (lotInfo.currentBid) {
+  if (lotInfo.currentBid || declareWinner) {
     fields.push({
       name: declareWinner ? 'Winning Bid' : 'Current Bid',
-      value: `${EMOTES.COIN} ${lotInfo.currentBid.toLocaleString('en-us')}`,
+      value: `${EMOTES.COIN} ${
+        lotInfo.currentBid?.toLocaleString('en-us') || 'No Bids'
+      }`,
       inline: true,
     });
   }
 
-  if (lotInfo.currentLeader) {
+  if (lotInfo.currentLeader || declareWinner) {
     fields.push({
       name: declareWinner ? 'Winner' : 'Current Leader',
-      value: `<@${lotInfo.currentLeader}>`,
+      value: `${
+        lotInfo.currentLeader ? `<@${lotInfo.currentLeader}>` : 'No Winner'
+      }`,
       inline: true,
     });
   }
