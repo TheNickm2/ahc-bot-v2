@@ -15,7 +15,7 @@ export async function activateAuction(
   try {
     const redisDatePromise = setRedisKeyValue(
       'auctionEndDate',
-      endDate.toString(),
+      endDate.getTime(),
     );
     const redisActivePromise = setRedisKeyValue('auctionActive', 'true');
     const redisChannelIdPromise = setRedisKeyValue(

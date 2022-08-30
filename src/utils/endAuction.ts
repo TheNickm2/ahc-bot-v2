@@ -45,6 +45,7 @@ export async function endAuction(client: Client) {
         winningBid: lot.currentBid || -1,
         winnerId: lot.currentLeader || 'No winner',
         id: lot.id,
+        auctionEnd: new Date(),
       });
       if (!historicalLotResult) return;
     });

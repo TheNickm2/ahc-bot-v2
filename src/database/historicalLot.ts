@@ -8,6 +8,7 @@ export interface IHistoricalLot {
   winningBid: number;
   winnerId: string;
   id: string;
+  auctionEnd: Date;
 }
 
 const historicalLotSchema = new Schema<IHistoricalLot>({
@@ -17,6 +18,7 @@ const historicalLotSchema = new Schema<IHistoricalLot>({
   winningBid: { type: Number, required: true },
   winnerId: { type: String, required: true },
   id: { type: String, required: true, unique: true },
+  auctionEnd: { type: Date, required: true },
 });
 
 const HistoricalLot = model<IHistoricalLot>(
