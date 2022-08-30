@@ -2,11 +2,14 @@ import { embedAuctionLot } from '@/embeds';
 import { downloadAuctionLots } from '@/utils/downloadAuctionLots';
 import { Logger } from '@/utils';
 import type { TextBasedChannel } from 'discord.js';
-import { getAllAuctionLots, IAuctionLot, saveAuctionLot, saveHistoricalLot } from '@/database';
+import {
+  getAllAuctionLots,
+  IAuctionLot,
+  saveAuctionLot,
+  saveHistoricalLot,
+} from '@/database';
 
-export async function postAuctionLots(
-  channel: TextBasedChannel,
-) {
+export async function postAuctionLots(channel: TextBasedChannel) {
   try {
     const clearOldResult = await removeExistingLots(channel);
     if (!clearOldResult) return;
@@ -40,9 +43,12 @@ async function removeExistingLots(channel: TextBasedChannel) {
     if (!existingLots || !existingLots.length) return true;
 
     for (const lot of existingLots) {
-      const result = await channel.messages.fetch(lot.id);
-      if (!result) continue;
-      await result.delete();
+      channel.messages
+        .fetch(lot.id)
+        .then((msg) => {
+          if (msg.deletable) msg.delete();
+        })
+        .catch((err) => {}); // Silence error that occurs when message is already deleted
       await lot.delete();
     }
     return true;

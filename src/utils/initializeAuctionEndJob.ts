@@ -15,7 +15,7 @@ export async function activateAuction(
   try {
     const redisDatePromise = setRedisKeyValue(
       'auctionEndDate',
-      endDate.toUTCString(),
+      endDate.toString(),
     );
     const redisActivePromise = setRedisKeyValue('auctionActive', 'true');
     const redisChannelIdPromise = setRedisKeyValue(
@@ -50,7 +50,7 @@ export async function initializeAuctionEndJob(endDate: Date, client: Client) {
       .scheduleJob(endDate, async () => {
         await endAuction(client);
       })
-      .addListener('success', () => Logger.info('Auction ended successfully'))
+      .addListener('success', () => Logger.info('Auction end function called successfully'))
       .addListener('error', (err) =>
         Logger.error(`Failed to end auction: ${err}`),
       );
