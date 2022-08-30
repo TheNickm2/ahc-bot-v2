@@ -1,7 +1,7 @@
 import { getAllAuctionLots, saveHistoricalLot } from '@/database';
 import { embedAuctionLot } from '@/embeds';
 import { getRedisKeyValue, Logger, setRedisKeyValue } from '@/utils';
-import type { Client } from 'discord.js';
+import { Client, MessageEmbed } from 'discord.js';
 
 export async function endAuction(client: Client) {
   try {
@@ -50,15 +50,15 @@ export async function endAuction(client: Client) {
       if (!historicalLotResult) return;
     });
 
-    const winMsg = `**The auction has ended**! Congratulations to the winners below:${allAuctionLots.reduce(
-      (acc, curr) =>
+    const winMsg = `__**The auction has ended**! Congratulations to the winners below__${allAuctionLots.reduce(
+      (acc, curr, index) =>
         acc +
-        `\n**${curr.title}:** ${
-          curr.currentLeader ? `<@${curr.currentLeader}>` : 'No winner'
-        }`,
+        `\n\n**Lot #${index + 1}** | ${curr.title}\n${
+          curr.currentLeader ? `*<@${curr.currentLeader}>` : '*No winner'
+        } (${curr.currentBid ? `${curr.currentBid} Gold` : 'No bids'})*`,
       '',
     )}`;
-    const winMsgResult = await channel.send(winMsg);
+    await channel.send(winMsg);
   } catch (err) {
     Logger.error(err);
     if (err instanceof Error) {
