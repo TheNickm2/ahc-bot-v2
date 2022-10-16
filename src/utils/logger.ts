@@ -27,7 +27,11 @@ export const Logger = {
     }
   },
   error: (msg: any) => {
-    console.error(`[${chalk.red('ERROR')}] ${msg}`);
+    if (msg instanceof Error) {
+      console.error(`[${chalk.red('ERROR')}] ${msg.stack}`);
+    } else {
+      console.error(`[${chalk.red('ERROR')}] ${msg}`);
+    }
     if (
       logLevel === 'error' ||
       logLevel === 'warn' ||

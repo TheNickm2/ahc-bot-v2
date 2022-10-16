@@ -44,11 +44,11 @@ export async function getTopSellersUpc() {
     const sheetHelper = new GoogleSheetsHelper(sheetId);
     const sheet = await sheetHelper.loadSheet('UPC Dues');
     if (!sheet) return false;
-    await sheet.loadCells('U3:V12');
+    await sheet.loadCells('AA3:AB12');
     const topSellers: Collection<string, number> = new Collection();
     for (let i = 3; i < 13; i++) {
-      const sellerName = await sheet.getCellByA1(`U${i}`).value.toString();
-      const sellerAmount = Number(await sheet.getCellByA1(`V${i}`).value);
+      const sellerName = await sheet.getCellByA1(`AA${i}`).value.toString();
+      const sellerAmount = Number(await sheet.getCellByA1(`AB${i}`).value);
       if (typeof sellerAmount === 'number') {
         topSellers.set(sellerName, sellerAmount);
       } else {
