@@ -4,65 +4,68 @@ import { getRedisKeyValue, Logger, setRedisKeyValue } from '@/utils';
 import { Client, MessageEmbed } from 'discord.js';
 
 export async function endAuction(client: Client) {
-  try {
-    const setAuctionActivePromise = setRedisKeyValue('auctionActive', 'false');
-    const setAuctionEndDatePromise = setRedisKeyValue('auctionEndDate', '');
-    const [setActiveResult, setEndDateResult] = await Promise.all([
-      setAuctionActivePromise,
-      setAuctionEndDatePromise,
-    ]);
-    if (!setActiveResult || !setEndDateResult) return;
+  return;
 
-    const auctionChannelId = await getRedisKeyValue('auctionChannelId');
-    if (!auctionChannelId) return;
-    const deleteChannelIdResult = await setRedisKeyValue(
-      'auctionChannelId',
-      '',
-    );
-    if (!deleteChannelIdResult) return;
+  // WIP
+  // try {
+  //   const setAuctionActivePromise = setRedisKeyValue('auctionActive', 'false');
+  //   const setAuctionEndDatePromise = setRedisKeyValue('auctionEndDate', '');
+  //   const [setActiveResult, setEndDateResult] = await Promise.all([
+  //     setAuctionActivePromise,
+  //     setAuctionEndDatePromise,
+  //   ]);
+  //   if (!setActiveResult || !setEndDateResult) return;
 
-    const channel = await client.channels.fetch(auctionChannelId);
-    if (!channel || !channel.isText()) return;
+  //   const auctionChannelId = await getRedisKeyValue('auctionChannelId');
+  //   if (!auctionChannelId) return;
+  //   const deleteChannelIdResult = await setRedisKeyValue(
+  //     'auctionChannelId',
+  //     '',
+  //   );
+  //   if (!deleteChannelIdResult) return;
 
-    const allAuctionLots = await getAllAuctionLots();
-    if (!allAuctionLots?.length) return;
+  //   const channel = await client.channels.fetch(auctionChannelId);
+  //   if (!channel || !channel.isText()) return;
 
-    allAuctionLots.forEach(async (lot) => {
-      const message = await channel.messages.fetch(lot.id);
-      if (!message) return;
+  //   const allAuctionLots = await getAllAuctionLots();
+  //   if (!allAuctionLots?.length) return;
 
-      const updatedEmbed = embedAuctionLot(lot, (allAuctionLots.indexOf(lot) + 1), true) ?? message.embeds[0]; // fallback to original embed if no updated embed is returned
-      const msgUpdateResult = await message.edit({
-        embeds: [updatedEmbed],
-        components: [],
-      });
-      if (!msgUpdateResult) return;
+  //   allAuctionLots.forEach(async (lot) => {
+  //     const message = await channel.messages.fetch(lot.id);
+  //     if (!message) return;
 
-      const historicalLotResult = await saveHistoricalLot({
-        title: lot.title || 'Unable to retrieve title',
-        description: lot.description || 'Unable to retrieve description',
-        startingBid: lot.startingBid || -1,
-        winningBid: lot.currentBid || -1,
-        winnerId: lot.currentLeader || 'No winner',
-        id: lot.id,
-        auctionEnd: new Date(),
-      });
-      if (!historicalLotResult) return;
-    });
+  //     const updatedEmbed = embedAuctionLot(lot, (allAuctionLots.indexOf(lot) + 1), true) ?? message.embeds[0]; // fallback to original embed if no updated embed is returned
+  //     const msgUpdateResult = await message.edit({
+  //       embeds: [updatedEmbed],
+  //       components: [],
+  //     });
+  //     if (!msgUpdateResult) return;
 
-    const winMsg = `__**The auction has ended**! Congratulations to the winners below__${allAuctionLots.reduce(
-      (acc, curr, index) =>
-        acc +
-        `\n\n**Lot #${index + 1}** | ${curr.title}\n${
-          curr.currentLeader ? `*<@${curr.currentLeader}>` : '*No winner'
-        } (${curr.currentBid ? `${curr.currentBid} Gold` : 'No bids'})*`,
-      '',
-    )}`;
-    await channel.send(winMsg);
-  } catch (err) {
-    Logger.error(err);
-    if (err instanceof Error) {
-      Logger.debug(err.stack);
-    }
-  }
+  //     const historicalLotResult = await saveHistoricalLot({
+  //       title: lot.title || 'Unable to retrieve title',
+  //       description: lot.description || 'Unable to retrieve description',
+  //       startingBid: lot.startingBid || -1,
+  //       winningBid: lot.currentBid || -1,
+  //       winnerId: lot.currentLeader || 'No winner',
+  //       id: lot.id,
+  //       auctionEnd: new Date(),
+  //     });
+  //     if (!historicalLotResult) return;
+  //   });
+
+  //   const winMsg = `__**The auction has ended**! Congratulations to the winners below__${allAuctionLots.reduce(
+  //     (acc, curr, index) =>
+  //       acc +
+  //       `\n\n**Lot #${index + 1}** | ${curr.title}\n${
+  //         curr.currentLeader ? `*<@${curr.currentLeader}>` : '*No winner'
+  //       } (${curr.currentBid ? `${curr.currentBid} Gold` : 'No bids'})*`,
+  //     '',
+  //   )}`;
+  //   await channel.send(winMsg);
+  // } catch (err) {
+  //   Logger.error(err);
+  //   if (err instanceof Error) {
+  //     Logger.debug(err.stack);
+  //   }
+  // }
 }

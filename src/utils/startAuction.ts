@@ -29,25 +29,27 @@ export async function startAuction(
     // Add "bid" buttons to each lot
     const auctionLots = await getAllAuctionLots();
     if (!auctionLots?.length) return;
-    auctionLots.forEach(async (lot) => {
-      const msg = await channel.messages.fetch(lot.id);
-      if (!msg) return;
-      const button = new MessageButton()
-        .setCustomId(`${BID_BUTTON_ID_PREFIX}${lot.id}`)
-        .setLabel('Place Bid')
-        .setStyle('SECONDARY')
-        .setEmoji(process.env.EMOTE_COIN || '<a:coin:726992358251561091>');
-      const editResult = await msg.edit({
-        components: [new MessageActionRow().addComponents([button])],
-      });
-      if (!editResult) return;
-      emitter.addListener(
-        button.customId || `${BID_BUTTON_ID_PREFIX}${lot.id}`,
-        async (interaction: ButtonInteraction) => {
-          await handleBidButtonEvent(interaction, emitter);
-        },
-      );
-    });
+
+    // ! WIP
+    // auctionLots.forEach(async (lot) => {
+    //   const msg = await channel.messages.fetch(lot.id);
+    //   if (!msg) return;
+    //   const button = new MessageButton()
+    //     .setCustomId(`${BID_BUTTON_ID_PREFIX}${lot.id}`)
+    //     .setLabel('Place Bid')
+    //     .setStyle('SECONDARY')
+    //     .setEmoji(process.env.EMOTE_COIN || '<a:coin:726992358251561091>');
+    //   const editResult = await msg.edit({
+    //     components: [new MessageActionRow().addComponents([button])],
+    //   });
+    //   if (!editResult) return;
+    //   emitter.addListener(
+    //     button.customId || `${BID_BUTTON_ID_PREFIX}${lot.id}`,
+    //     async (interaction: ButtonInteraction) => {
+    //       await handleBidButtonEvent(interaction, emitter);
+    //     },
+    //   );
+    // });
 
     // Post auction embed to channel
     const summaryEmbed = embedAuctionSummary({
@@ -64,25 +66,26 @@ export async function startAuction(
     await activateAuction(endDate, channel.client, channel);
 
     // Post announcement in announcement channel
-    const announcementChannelId = process.env.ANNOUNCEMENT_CHANNEL_ID;
-    if (!announcementChannelId) return;
-    await channel.guild.fetch();
-    await channel.guild.channels.fetch();
-    const announcementChannel = channel.guild.channels.cache.get(
-      announcementChannelId,
-    ) as TextChannel;
-    if (!announcementChannel) return;
-    const announcementMentionIds: string[] | undefined = JSON.parse(
-      process.env.ANNOUNCEMENT_MENTION_ROLES || '[]',
-    ) as string[];
-    let mentionString = '';
-    if (announcementMentionIds?.length) {
-      mentionString =
-        announcementMentionIds.map((id) => `<@&${id}>`).join(' ') + ' ';
-    }
-    await announcementChannel.send({
-      content: `${mentionString}${announcement}`,
-    });
+    // ! WIP
+    // const announcementChannelId = process.env.ANNOUNCEMENT_CHANNEL_ID;
+    // if (!announcementChannelId) return;
+    // await channel.guild.fetch();
+    // await channel.guild.channels.fetch();
+    // const announcementChannel = channel.guild.channels.cache.get(
+    //   announcementChannelId,
+    // ) as TextChannel;
+    // if (!announcementChannel) return;
+    // const announcementMentionIds: string[] | undefined = JSON.parse(
+    //   process.env.ANNOUNCEMENT_MENTION_ROLES || '[]',
+    // ) as string[];
+    // let mentionString = '';
+    // if (announcementMentionIds?.length) {
+    //   mentionString =
+    //     announcementMentionIds.map((id) => `<@&${id}>`).join(' ') + ' ';
+    // }
+    // await announcementChannel.send({
+    //   content: `${mentionString}${announcement}`,
+    // });
     return true;
   } catch (error) {
     Logger.error(error);
