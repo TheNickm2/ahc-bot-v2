@@ -31,7 +31,7 @@ export async function endAuction(client: Client) {
       const message = await channel.messages.fetch(lot.id);
       if (!message) return;
 
-      const updatedEmbed = embedAuctionLot(lot, true) ?? message.embeds[0]; // fallback to original embed if no updated embed is returned
+      const updatedEmbed = embedAuctionLot(lot, (allAuctionLots.indexOf(lot) + 1), true) ?? message.embeds[0]; // fallback to original embed if no updated embed is returned
       const msgUpdateResult = await message.edit({
         embeds: [updatedEmbed],
         components: [],

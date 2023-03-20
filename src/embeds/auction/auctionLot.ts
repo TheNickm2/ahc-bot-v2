@@ -16,6 +16,7 @@ const EMBED_COLOR =
 
 export function embedAuctionLot(
   lotInfo: Omit<IAuctionLot, 'id'>,
+  lotNumber: Number,
   declareWinner: boolean = false,
 ) {
   if (!lotInfo.startingBid) {
@@ -51,7 +52,7 @@ export function embedAuctionLot(
   }
 
   return new MessageEmbed()
-    .setTitle(lotInfo.title)
+    .setTitle(`Lot ${lotNumber}: ${lotInfo.title}`)
     .setDescription(lotInfo.description)
     .setImage(lotInfo.image || '')
     .setFields(fields)

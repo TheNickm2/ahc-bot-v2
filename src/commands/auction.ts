@@ -162,7 +162,7 @@ export const auctionCommand = {
             return;
           }
         }
-        const result = await startAuction(endDate, announcementInput.trim(), interaction.channel as TextChannel);
+        const result = await startAuction(endDate, announcementInput.trim(), interaction.channel as TextChannel, emitter);
       },
     );
   },

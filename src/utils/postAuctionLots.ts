@@ -17,7 +17,7 @@ export async function postAuctionLots(channel: TextBasedChannel) {
     if (!googleSheetsLots || !googleSheetsLots.length) return;
 
     for (const lot of googleSheetsLots) {
-      const msgEmbed = embedAuctionLot(lot);
+      const msgEmbed = embedAuctionLot(lot, (googleSheetsLots.indexOf(lot) + 1));
       if (!msgEmbed) continue;
 
       const result = await channel.send({

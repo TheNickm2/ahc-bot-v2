@@ -3,6 +3,7 @@ import { embedAuctionSummary } from '@/embeds';
 import { activateAuction, initializeAuctionEndJob, Logger } from '@/utils';
 import { setRedisKeyValue } from '@/utils/redis';
 import {
+  ButtonInteraction,
   MessageActionRow,
   MessageButton,
   TextBasedChannel,
@@ -11,6 +12,8 @@ import {
 import schedule from 'node-schedule';
 import dotenv from 'dotenv';
 import { endAuction } from '@/utils/endAuction';
+import { EventEmitter } from 'events';
+import { handleBidButtonEvent } from '@/utils/handleBid';
 
 dotenv.config();
 
@@ -20,6 +23,7 @@ export async function startAuction(
   endDate: Date,
   announcement: string,
   channel: TextChannel,
+  emitter: EventEmitter,
 ) {
   try {
     // Add "bid" buttons to each lot
@@ -37,6 +41,12 @@ export async function startAuction(
         components: [new MessageActionRow().addComponents([button])],
       });
       if (!editResult) return;
+      emitter.addListener(
+        button.customId || `${BID_BUTTON_ID_PREFIX}${lot.id}`,
+        async (interaction: ButtonInteraction) => {
+          await handleBidButtonEvent(interaction, emitter);
+        },
+      );
     });
 
     // Post auction embed to channel
