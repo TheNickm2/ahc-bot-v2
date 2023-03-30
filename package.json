@@ -8,7 +8,6 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/index.ts",
     "watch": "npm run dev",
     "lint": "eslint --fix --cache --cache-location \"node_modules/.eslintcache\" src/**/* && prettier --write src/**/*",
-    "prepare": "husky install",
     "publish-commands": "ts-node -r tsconfig-paths/register ./publishCommands.ts"
   },
   "repository": {
