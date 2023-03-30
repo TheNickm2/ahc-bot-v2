@@ -1,5 +1,5 @@
 import type { IAuctionLot } from '@/database';
-import { MessageEmbed, TextChannel } from 'discord.js';
+import { EmbedBuilder, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,7 +30,7 @@ export function embedAuctionSummary({
   const auctionActive = endDate > new Date();
   const endTimestamp = Math.round(endDate.getTime() / 1000);
 
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setTitle(`Auction Summary ${coinEmote}`)
     .setDescription(
       `${

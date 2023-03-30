@@ -1,7 +1,7 @@
 import { getAllAuctionLots, saveHistoricalLot } from '@/database';
 import { embedAuctionLot } from '@/embeds';
 import { getRedisKeyValue, Logger, setRedisKeyValue } from '@/utils';
-import { Client, MessageEmbed } from 'discord.js';
+import { Client, EmbedBuilder } from 'discord.js';
 
 export async function endAuction(client: Client) {
   return;

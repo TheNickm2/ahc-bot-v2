@@ -1,14 +1,15 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   GuildMember,
-  GuildMemberRoleManager,
   HexColorString,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
+  ActionRowBuilder,
+  ButtonBuilder,
+  EmbedBuilder,
+  ButtonStyle,
+  PermissionsBitField,
+  SlashCommandBuilder,
 } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
 import { Logger } from '@/utils';
 import DotEnv from 'dotenv';
@@ -39,9 +40,9 @@ export const infoCenterCommand = {
       .setName('infocenter')
       .setDescription('View data from the AHF Info Center within Discord!');
   },
-  executeCommand: async (interaction: CommandInteraction) => {
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
     try {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(EMBED_COLOR)
         .setTitle('AHF Info Center')
         .setURL(
@@ -61,26 +62,26 @@ export const infoCenterCommand = {
         )
         .setTimestamp();
 
-      const buttons = new MessageActionRow().addComponents(
-        new MessageButton()
+      const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
           .setCustomId(TOP_SELLERS_BUTTON_ID)
           .setLabel('Top Sellers')
-          .setStyle('SECONDARY')
+          .setStyle(ButtonStyle.Secondary)
           .setEmoji('<a:coin:726992358251561091>'),
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId(CHECK_MY_STATUS_BUTTON_ID)
           .setLabel('Check My Status')
-          .setStyle('SECONDARY')
+          .setStyle(ButtonStyle.Secondary)
           .setEmoji('<:info:985035960305745990>'),
-        new MessageButton()
-          .setCustomId(VINNY_RAFFLE_BUTTON_ID)
-          .setLabel('Vinny Raffle Status')
-          .setStyle('SECONDARY')
-          .setEmoji('<:chilla:805218053360451686>'),
-        new MessageButton()
+        // new ButtonBuilder()
+        //   .setCustomId(VINNY_RAFFLE_BUTTON_ID)
+        //   .setLabel('Vinny Raffle Status')
+        //   .setStyle(ButtonStyle.Secondary)
+        //   .setEmoji('<:chilla:805218053360451686>'),
+        new ButtonBuilder()
           .setCustomId(SERVER_BOOSTER_BUTTON_ID)
           .setLabel('Server Boosters')
-          .setStyle('SECONDARY')
+          .setStyle(ButtonStyle.Secondary)
           .setEmoji('<a:nitroboostspin:909698016141778966>'),
       );
 
@@ -127,7 +128,7 @@ export const infoCenterCommand = {
             } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
           });
 
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setTitle('Top Sellers')
             .setColor(EMBED_COLOR)
             .setAuthor({
@@ -142,8 +143,16 @@ export const infoCenterCommand = {
             .setThumbnail(
               'https://cdn.discordapp.com/emojis/726992358251561091.gif',
             )
-            .addField(`${AHC_BANNER_EMOTE} AHC Top Sellers`, ahcSellerString)
-            .addField(`${UPC_BANNER_EMOTE} UPC Top Sellers`, upcSellerString)
+            .addFields([
+              {
+                name: `${AHC_BANNER_EMOTE} AHC Top Sellers`,
+                value: ahcSellerString,
+              },
+              {
+                name: `${UPC_BANNER_EMOTE} UPC Top Sellers`,
+                value: upcSellerString,
+              },
+            ])
             .setFooter({
               text: `Cache last updated`,
             })
@@ -200,7 +209,7 @@ export const infoCenterCommand = {
         );
 
         const ahcEmbed = memberAhc
-          ? new MessageEmbed()
+          ? new EmbedBuilder()
               .setTitle('Your AHC Status')
               .setAuthor({
                 name: 'AHF Info Center',
@@ -250,7 +259,7 @@ export const infoCenterCommand = {
               .setTimestamp(lastUpdated)
           : undefined;
         const upcEmbed = memberUpc
-          ? new MessageEmbed()
+          ? new EmbedBuilder()
               .setTitle('Your UPC Status')
               .setAuthor({
                 name: 'AHF Info Center',
@@ -293,7 +302,7 @@ export const infoCenterCommand = {
               .setTimestamp(lastUpdated)
           : undefined;
 
-        const embeds: MessageEmbed[] = [];
+        const embeds: EmbedBuilder[] = [];
 
         if (ahcEmbed) embeds.push(ahcEmbed);
         if (upcEmbed) embeds.push(upcEmbed);
@@ -334,12 +343,12 @@ export const infoCenterCommand = {
           }, '');
 
           const isOfficer =
-            interaction.memberPermissions?.has('MODERATE_MEMBERS');
-          const msgActionRow = new MessageActionRow().addComponents(
-            new MessageButton()
+            interaction.memberPermissions?.has(PermissionsBitField.Flags.ModerateMembers);
+          const msgActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            new ButtonBuilder()
               .setCustomId(SHARE_BOOSTER_BUTTON_ID)
               .setLabel('Share with Channel')
-              .setStyle('SECONDARY'),
+              .setStyle(ButtonStyle.Secondary),
           );
 
           await interaction.editReply({

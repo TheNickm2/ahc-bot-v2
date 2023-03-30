@@ -1,16 +1,12 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   Collection,
   TextChannel,
-  MessageActionRow,
-  MessageButton,
-} from 'discord.js';
-import {
   ActionRowBuilder,
   ButtonBuilder,
   SlashCommandBuilder,
-} from '@discordjs/builders';
+} from 'discord.js';
 import type { EventEmitter } from 'events';
 import { Logger } from '@/utils';
 import { ButtonStyle } from 'discord-api-types/v10';
@@ -21,7 +17,7 @@ const BUTTON_ID = '';
 const randomInteger = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
-const msgOptions: Collection<string, CommandInteraction> = new Collection();
+const msgOptions: Collection<string, ChatInputCommandInteraction> = new Collection();
 
 const getResponseString = (qty: number, sides: number) => {
   let results = '';
@@ -50,7 +46,7 @@ export const rollCommand = {
           .setDescription('How many rolls should we do? (Max 10)'),
       );
   },
-  executeCommand: async (interaction: CommandInteraction) => {
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
     try {
       await interaction.deferReply();
 
@@ -62,12 +58,12 @@ export const rollCommand = {
         return;
       }
 
-      const componentRow = new MessageActionRow<MessageButton>().addComponents([
-        new MessageButton()
+      const componentRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
+        new ButtonBuilder()
           .setCustomId('reroll')
           .setEmoji('🎲')
           .setLabel('Reroll')
-          .setStyle('SECONDARY'),
+          .setStyle(ButtonStyle.Secondary),
       ]);
 
       const interactionReply = await interaction.fetchReply();
@@ -149,12 +145,12 @@ export const rollCommand = {
         }
 
         const componentRow =
-          new MessageActionRow<MessageButton>().addComponents([
-            new MessageButton()
+          new ActionRowBuilder<ButtonBuilder>().addComponents([
+            new ButtonBuilder()
               .setCustomId('reroll')
               .setEmoji('🎲')
               .setLabel('Reroll')
-              .setStyle('SECONDARY'),
+              .setStyle(ButtonStyle.Secondary),
           ]);
 
         const sides = (previousInteraction.options.get('sides', false)?.value ??

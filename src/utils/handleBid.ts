@@ -2,10 +2,11 @@ import { getAuctionLot } from '@/database';
 import { BID_BUTTON_ID_PREFIX, Logger } from '@/utils';
 import {
   ButtonInteraction,
-  MessageActionRow,
-  Modal,
+  ActionRowBuilder,
+  ModalBuilder,
   ModalSubmitInteraction,
-  TextInputComponent,
+  TextInputBuilder,
+  TextInputStyle,
 } from 'discord.js';
 import EventEmitter from 'events';
 import { v4 as v4Uuid } from 'uuid';
@@ -23,16 +24,16 @@ export async function handleBidButtonEvent(
     const lot = await getAuctionLot(lotId);
     if (!lot) return;
     const uuid = v4Uuid();
-    const modal = new Modal()
+    const modal = new ModalBuilder()
       .setTitle(`Bid on ${lot.title}`)
       .setCustomId(`${BID_BUTTON_ID_PREFIX}${uuid}`)
       .addComponents(
-        new MessageActionRow<TextInputComponent>().addComponents(
-          new TextInputComponent()
+        new ActionRowBuilder<TextInputBuilder>().addComponents(
+          new TextInputBuilder()
             .setCustomId(`bidAmount`)
             .setLabel('Bid Amount (Numbers Only)')
             .setRequired(true)
-            .setStyle('SHORT'),
+            .setStyle(TextInputStyle.Short),
         ),
       );
     emitter.addListener(`${BID_BUTTON_ID_PREFIX}${uuid}`, async (interaction: ModalSubmitInteraction) => {

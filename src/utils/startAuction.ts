@@ -4,8 +4,8 @@ import { activateAuction, initializeAuctionEndJob, Logger } from '@/utils';
 import { setRedisKeyValue } from '@/utils/redis';
 import {
   ButtonInteraction,
-  MessageActionRow,
-  MessageButton,
+  ActionRowBuilder,
+  ButtonBuilder,
   TextBasedChannel,
   TextChannel,
 } from 'discord.js';

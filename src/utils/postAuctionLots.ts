@@ -49,7 +49,7 @@ async function removeExistingLots(channel: TextBasedChannel) {
           if (msg.deletable) msg.delete();
         })
         .catch((err) => {}); // Silence error that occurs when message is already deleted
-      await lot.delete();
+      await lot.deleteOne();
     }
     return true;
   } catch (err) {

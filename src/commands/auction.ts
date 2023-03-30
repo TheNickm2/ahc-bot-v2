@@ -1,17 +1,19 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
-  MessageActionRow,
-  MessageButton,
-  Modal,
+  ChatInputCommandInteraction,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ModalBuilder,
   ModalSubmitInteraction,
   TextChannel,
-  TextInputComponent,
+  TextInputBuilder,
+  ButtonStyle,
+  TextInputStyle,
+  SlashCommandBuilder,
 } from 'discord.js';
-import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
-import { downloadAuctionLots, isStringUrl, Logger, startAuction } from '@/utils';
-import { getAllAuctionLots, saveAuctionLot } from '@/database';
+import { startAuction } from '@/utils';
+import { getAllAuctionLots } from '@/database';
 import { postAuctionLots } from '@/utils/postAuctionLots';
 import Sugar from 'sugar';
 
@@ -32,16 +34,16 @@ export const auctionCommand = {
       .setDescription('Auction Management | Officers Only')
       .setDefaultMemberPermissions(DEFAULT_PERMISSIONS_INTEGER);
   },
-  executeCommand: async (interaction: CommandInteraction) => {
-    const postLotsButton = new MessageButton()
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
+    const postLotsButton = new ButtonBuilder()
       .setCustomId(POST_LOTS_BUTTON_ID)
       .setLabel('Post Lots')
-      .setStyle('SECONDARY');
-    const startAuctionButton = new MessageButton()
+      .setStyle(ButtonStyle.Secondary);
+    const startAuctionButton = new ButtonBuilder()
       .setCustomId(START_AUCTION_BUTTON_ID)
       .setLabel('Start Auction')
-      .setStyle('SUCCESS');
-    const actionRow = new MessageActionRow().addComponents([
+      .setStyle(ButtonStyle.Success);
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents([
       postLotsButton,
       startAuctionButton,
     ]);
@@ -94,24 +96,24 @@ export const auctionCommand = {
           });
           return;
         }
-        const modal = new Modal()
+        const modal = new ModalBuilder()
           .setCustomId(START_AUCTION_MODAL_ID)
           .setTitle('Start Auction')
           .addComponents(
-            new MessageActionRow<TextInputComponent>().addComponents(
-              new TextInputComponent()
+            new ActionRowBuilder<TextInputBuilder>().addComponents(
+              new TextInputBuilder()
                 .setCustomId(START_MODAL_END_DATE_INPUT_ID)
                 .setLabel('Auction End Date (Eastern Time)')
                 .setRequired(true)
-                .setStyle('SHORT')
+                .setStyle(TextInputStyle.Short)
                 .setPlaceholder('Saturday at 8PM'),
             ),
-            new MessageActionRow<TextInputComponent>().addComponents(
-              new TextInputComponent()
+            new ActionRowBuilder<TextInputBuilder>().addComponents(
+              new TextInputBuilder()
                 .setCustomId(START_MODAL_ANNOUNCEMENT_INPUT_ID)
                 .setLabel('Auction Announcement Message')
                 .setRequired(true)
-                .setStyle('PARAGRAPH')
+                .setStyle(TextInputStyle.Paragraph)
                 .setPlaceholder(
                   'Message to be sent to all users when the auction starts.',
                 ),

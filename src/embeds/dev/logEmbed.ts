@@ -1,4 +1,4 @@
-import { HexColorString, MessageEmbed } from 'discord.js';
+import { HexColorString, EmbedBuilder } from 'discord.js';
 
 const LogLevelEmojis = {
   debug: '🐞',
@@ -21,14 +21,19 @@ export function embedLogMsg(
   msg: string,
   logLevel: 'debug' | 'info' | 'warn' | 'error',
 ) {
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setTitle(
       `${LogLevelEmojis[logLevel]} ${capitalizeFirstLetter(logLevel)} Log ${
         LogLevelEmojis[logLevel]
       }`,
     )
     .setDescription(`${'```'}\n${msg}\n${'```'}`)
-    .addField('Log Level', capitalizeFirstLetter(logLevel))
+    .addFields([
+      {
+        name: 'Log Level',
+        value: capitalizeFirstLetter(logLevel),
+      },
+    ])
     .setColor(LogLevelColors[logLevel])
     .setTimestamp();
 }

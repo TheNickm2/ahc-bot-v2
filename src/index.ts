@@ -1,5 +1,12 @@
 import { Commands } from './commands';
-import { CacheType, Client, Intents, Interaction } from 'discord.js';
+import {
+  CacheType,
+  ChatInputCommandInteraction,
+  Client,
+  GatewayIntentBits,
+  Interaction,
+  InteractionType,
+} from 'discord.js';
 import { EventEmitter } from 'events';
 import * as Dotenv from 'dotenv';
 import { getRedisKeyValue, initializeAuctionEndJob, Logger } from '@/utils';
@@ -21,17 +28,17 @@ function Main() {
 
     const botClient = new Client({
       intents: [
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_PRESENCES,
-        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.DIRECT_MESSAGES,
-        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.DirectMessageReactions,
       ],
       ws: {
         properties: {
-          $browser: 'Discord iOS',
+          browser: 'Discord iOS',
         },
       },
     });
@@ -85,13 +92,16 @@ function Main() {
 
 async function InteractionHandler(interaction: Interaction<CacheType>) {
   try {
-    if (interaction.isCommand()) {
+    if (interaction.type === InteractionType.ApplicationCommand) {
       const command = Commands.find(
         (cmd) => cmd.createCommand().name === interaction.commandName,
       );
       if (!command) return;
-      await command.executeCommand(interaction);
-    } else if (interaction.isButton() || interaction.isModalSubmit()) {
+      await command.executeCommand(interaction as ChatInputCommandInteraction);
+    } else if (
+      interaction.type === InteractionType.MessageComponent ||
+      interaction.type === InteractionType.ModalSubmit
+    ) {
       Emitter.emit(interaction.customId, interaction);
     }
   } catch (err) {

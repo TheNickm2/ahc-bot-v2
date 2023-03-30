@@ -1,13 +1,12 @@
 import {
   ButtonInteraction,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   version as djsVersion,
 } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { EventEmitter } from 'events';
 import { version as tsVersion } from 'typescript';
-import fileSize from 'filesize';
-import { Logger } from '@/utils';
+import { filesize } from 'filesize';
 import os from 'node:os';
 import type { embedDevInfoParams } from '@/embeds';
 import { embedDevInfo } from '@/embeds';
@@ -20,15 +19,15 @@ export const devCommand = {
       .setName('dev')
       .setDescription('Information for developers');
   },
-  executeCommand: async (interaction: CommandInteraction) => {
+  executeCommand: async (interaction: ChatInputCommandInteraction) => {
     const memory = process.memoryUsage();
 
     const devVars: embedDevInfoParams = {
       nodeVersion: process.version,
       tsVersion,
       djsVersion,
-      heapSize: fileSize(memory.heapTotal),
-      heapUsed: fileSize(memory.heapUsed),
+      heapSize: filesize(memory.heapTotal).toString(),
+      heapUsed: filesize(memory.heapUsed).toString(),
       hostname: os.hostname(),
       // services: {
       // },

@@ -1,5 +1,5 @@
 import type { IAuctionLot } from '@/database';
-import { HexColorString, MessageEmbed } from 'discord.js';
+import { HexColorString, EmbedBuilder } from 'discord.js';
 import DotEnv from 'dotenv';
 
 DotEnv.config();
@@ -51,7 +51,7 @@ export function embedAuctionLot(
     });
   }
 
-  return new MessageEmbed()
+  return new EmbedBuilder()
     .setTitle(`Lot ${lotNumber}: ${lotInfo.title}`)
     .setDescription(lotInfo.description)
     .setImage(lotInfo.image || '')

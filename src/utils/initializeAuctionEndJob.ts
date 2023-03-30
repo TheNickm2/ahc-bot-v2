@@ -45,16 +45,17 @@ export async function activateAuction(
 
 export async function initializeAuctionEndJob(endDate: Date, client: Client) {
   try {
-    Logger.info('Initializing auction end job');
-    const job = schedule
-      .scheduleJob(endDate, async () => {
-        await endAuction(client);
-      })
-      .addListener('success', () => Logger.info('Auction end function called successfully'))
-      .addListener('error', (err) =>
-        Logger.error(`Failed to end auction: ${err}`),
-      );
-    return job;
+    // Logger.info('Initializing auction end job');
+    // const job = schedule
+    //   .scheduleJob(endDate, async () => {
+    //     await endAuction(client);
+    //   })
+    //   .addListener('success', () => Logger.info('Auction end function called successfully'))
+    //   .addListener('error', (err) =>
+    //     Logger.error(`Failed to end auction: ${err}`),
+    //   );
+    // return job;
+    return true;
   } catch (err) {
     Logger.error(err);
     return false;
