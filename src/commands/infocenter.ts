@@ -27,12 +27,12 @@ const SERVER_BOOSTER_BUTTON_ID = 'serverBooster';
 const SHARE_BOOSTER_BUTTON_ID = 'shareBooster';
 
 const AHC_BANNER_EMOTE = '<:AHCbanner:975254289888968794>';
-const UPC_BANNER_EMOTE = '<:UPCbanner:985742809606807553>';
+// const UPC_BANNER_EMOTE = '<:UPCbanner:985742809606807553>';
 
 const AHC_BANNER_IMAGE =
   'https://media.discordapp.net/stickers/975254619657756702.png';
-const UPC_BANNER_IMAGE =
-  'https://media.discordapp.net/stickers/985746042542764164.png';
+// const UPC_BANNER_IMAGE =
+//   'https://media.discordapp.net/stickers/985746042542764164.png';
 
 export const infoCenterCommand = {
   createCommand: () => {
@@ -102,10 +102,10 @@ export const infoCenterCommand = {
           await interaction.deferReply();
           const {
             AHC: topSellersAhc,
-            UPC: topSellersUpc,
+            // UPC: topSellersUpc,
             lastUpdated,
           } = Cache.getTopSellers();
-          if (!topSellersAhc.size || !topSellersUpc.size) {
+          if (!topSellersAhc.size /*|| !topSellersUpc.size*/) {
             await interaction.deleteReply();
             await interaction.followUp({
               ephemeral: true,
@@ -121,12 +121,12 @@ export const infoCenterCommand = {
             } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
           });
 
-          let upcSellerString = '';
-          topSellersUpc.forEach((amount, sellerName) => {
-            upcSellerString += `${
-              process.env.EMOTE_LIST_ITEM || '-'
-            } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
-          });
+          // let upcSellerString = '';
+          // topSellersUpc.forEach((amount, sellerName) => {
+          //   upcSellerString += `${
+          //     process.env.EMOTE_LIST_ITEM || '-'
+          //   } ${sellerName} (${amount.toLocaleString('en-US')})\n`;
+          // });
 
           const embed = new EmbedBuilder()
             .setTitle('Top Sellers')
@@ -148,10 +148,10 @@ export const infoCenterCommand = {
                 name: `${AHC_BANNER_EMOTE} AHC Top Sellers`,
                 value: ahcSellerString,
               },
-              {
-                name: `${UPC_BANNER_EMOTE} UPC Top Sellers`,
-                value: upcSellerString,
-              },
+              // {
+              //   name: `${UPC_BANNER_EMOTE} UPC Top Sellers`,
+              //   value: upcSellerString,
+              // },
             ])
             .setFooter({
               text: `Cache last updated`,
@@ -180,8 +180,8 @@ export const infoCenterCommand = {
         await interaction.deferReply({
           ephemeral: true,
         });
-        const { AHC, UPC, lastUpdated } = Cache.getMembers();
-        if (!AHC.size || !UPC.size) {
+        const { AHC, /*UPC,*/ lastUpdated } = Cache.getMembers();
+        if (!AHC.size /*|| !UPC.size*/) {
           await interaction.editReply({
             content:
               'An error occurred while handling this request. Please try again later.',
@@ -193,18 +193,18 @@ export const infoCenterCommand = {
           ? discordMember.nickname
           : discordMember.user.username;
         const memberAhc = AHC.get(memberName.trim().toLowerCase());
-        const memberUpc = UPC.get(memberName.trim().toLowerCase());
-        if (!memberAhc && !memberUpc) {
+        // const memberUpc = UPC.get(memberName.trim().toLowerCase());
+        if (!memberAhc /*&& !memberUpc*/) {
           await interaction.editReply({
             content: `Unable to find a guild member with the name ${memberName}. If your Discord account name does not match your in-game account name, please set your nickname to match your in-game account name and try again.`,
           });
           return;
         }
 
-        const raffleKey = Object.keys(memberAhc ?? memberUpc ?? {}).find(
+        const raffleKey = Object.keys(memberAhc /*?? memberUpc*/ ?? {}).find(
           (key) => key.startsWith('Vinny Raffle Tickets'),
         );
-        const bonusKey = Object.keys(memberAhc ?? memberUpc ?? {}).find((key) =>
+        const bonusKey = Object.keys(memberAhc /*?? memberUpc*/ ?? {}).find((key) =>
           key.startsWith('Vinny Bonus Tickets'),
         );
 
@@ -258,54 +258,54 @@ export const infoCenterCommand = {
               .setFooter({ text: `Cache last updated` })
               .setTimestamp(lastUpdated)
           : undefined;
-        const upcEmbed = memberUpc
-          ? new EmbedBuilder()
-              .setTitle('Your UPC Status')
-              .setAuthor({
-                name: 'AHF Info Center',
-                iconURL: process.env.EMBED_AUTHOR_ICON || '',
-                url: process.env.EMBED_AUTHOR_LINK || '',
-              })
-              .setColor(EMBED_COLOR)
-              .setDescription(
-                `Hello ${memberName}! Check your UPC status below!`,
-              )
-              .addFields([
-                {
-                  name: 'User ID',
-                  value: memberUpc.Who,
-                  inline: true,
-                },
-                {
-                  name: 'Sales',
-                  value: memberUpc.Sales.toLocaleString('en-US'),
-                  inline: true,
-                },
-                {
-                  name: 'Vinny Raffle Tickets',
-                  value: memberUpc[raffleKey ?? 'raffle'] ?? 0,
-                  inline: true,
-                },
-                {
-                  name: 'Vinny Bonus Tickets',
-                  value: memberUpc[bonusKey ?? 'bonus'] ?? 0,
-                  inline: true,
-                },
-                {
-                  name: 'Mat Raffle Tickets',
-                  value: memberUpc['Mat Raffle Tickets'] ?? 0,
-                  inline: true,
-                },
-              ])
-              .setThumbnail(UPC_BANNER_IMAGE)
-              .setFooter({ text: `Cache last updated` })
-              .setTimestamp(lastUpdated)
-          : undefined;
+        // const upcEmbed = memberUpc
+        //   ? new EmbedBuilder()
+        //       .setTitle('Your UPC Status')
+        //       .setAuthor({
+        //         name: 'AHF Info Center',
+        //         iconURL: process.env.EMBED_AUTHOR_ICON || '',
+        //         url: process.env.EMBED_AUTHOR_LINK || '',
+        //       })
+        //       .setColor(EMBED_COLOR)
+        //       .setDescription(
+        //         `Hello ${memberName}! Check your UPC status below!`,
+        //       )
+        //       .addFields([
+        //         {
+        //           name: 'User ID',
+        //           value: memberUpc.Who,
+        //           inline: true,
+        //         },
+        //         {
+        //           name: 'Sales',
+        //           value: memberUpc.Sales.toLocaleString('en-US'),
+        //           inline: true,
+        //         },
+        //         {
+        //           name: 'Vinny Raffle Tickets',
+        //           value: memberUpc[raffleKey ?? 'raffle'] ?? 0,
+        //           inline: true,
+        //         },
+        //         {
+        //           name: 'Vinny Bonus Tickets',
+        //           value: memberUpc[bonusKey ?? 'bonus'] ?? 0,
+        //           inline: true,
+        //         },
+        //         {
+        //           name: 'Mat Raffle Tickets',
+        //           value: memberUpc['Mat Raffle Tickets'] ?? 0,
+        //           inline: true,
+        //         },
+        //       ])
+        //       .setThumbnail(UPC_BANNER_IMAGE)
+        //       .setFooter({ text: `Cache last updated` })
+        //       .setTimestamp(lastUpdated)
+        //   : undefined;
 
         const embeds: EmbedBuilder[] = [];
 
         if (ahcEmbed) embeds.push(ahcEmbed);
-        if (upcEmbed) embeds.push(upcEmbed);
+        // if (upcEmbed) embeds.push(upcEmbed);
 
         await interaction.editReply({
           embeds,
