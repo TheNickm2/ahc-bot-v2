@@ -1,7 +1,7 @@
 import { embedAuctionLot } from '@/embeds';
 import { downloadAuctionLots } from '@/utils/downloadAuctionLots';
 import { Logger } from '@/utils';
-import type { TextBasedChannel } from 'discord.js';
+import { ThreadAutoArchiveDuration, type TextBasedChannel } from 'discord.js';
 import {
   getAllAuctionLots,
   IAuctionLot,
@@ -17,13 +17,18 @@ export async function postAuctionLots(channel: TextBasedChannel) {
     if (!googleSheetsLots || !googleSheetsLots.length) return;
 
     for (const lot of googleSheetsLots) {
-      const msgEmbed = embedAuctionLot(lot, (googleSheetsLots.indexOf(lot) + 1));
+      const msgEmbed = embedAuctionLot(lot, googleSheetsLots.indexOf(lot) + 1);
       if (!msgEmbed) continue;
 
       const result = await channel.send({
         embeds: [msgEmbed],
       });
       if (!result) continue;
+
+      result.startThread({
+        name: `Lot ${googleSheetsLots.indexOf(lot) + 1}: ${lot.title}`,
+        autoArchiveDuration: ThreadAutoArchiveDuration.ThreeDays,
+      });
 
       const auctionLot: IAuctionLot = {
         id: result.id,
